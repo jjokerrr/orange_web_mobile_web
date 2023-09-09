@@ -228,6 +228,7 @@ function getWidgetObject (widget) {
         ...bindDataConfig.defaultValue
       }
     },
+    display: true,
     operationList: widget.operationList ? JSON.parse(JSON.stringify(widget.operationList)) : undefined,
     showName: SysCustomWidgetType.getValue(widget.widgetType),
     variableName: getDefaultVariableName(widget.widgetType),
@@ -250,7 +251,6 @@ function getWidgetObject (widget) {
     style: {},
     supportOperation: (widget.supportOperation == null ? false : widget.supportOperation)
   }
-  console.log(temp);
   return temp;
 }
 

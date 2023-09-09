@@ -39,7 +39,8 @@ export default {
   props: {
     // 增加接口
     variableDisplay: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     formId: {
       type: String,
