@@ -1,20 +1,20 @@
 <template>
   <div style="background-color: white;padding: 16px;">
     <div class="title">
-      <p>您看到的所有演示功能，无需手写一行代码，这一切都由<span> 橙单 </span>为您生成。</p>
+      <p>您看到的所有演示功能，无需手写一行代码，这一切都由<span> 数据建模 </span>为您生成。</p>
     </div>
     <el-row type="flex">
       <div style="width: 100%;">
         <el-card class="box-card" shadow="never" :body-style="{padding: '0px 20px'}">
           <el-collapse v-model="currentItem">
-            <el-collapse-item title="选择橙单" name="1">
+            <el-collapse-item title="选择数据建模" name="1">
               <ul class="item-list">
                 <li><strong>承诺</strong>，全网最低价和最宽松的商业版授权，全部源码交付，包名随便改，永久免费升级。</li>
                 <li><strong>理念</strong>，极强大的代码生成能力，80% 以上的业务代码无需手写，对二次开发非常友好。</li>
                 <li><strong>功能</strong>，工作流、在线表单、统计报表和打印、多租户、用户权限、数据权限过滤、全类型数据字典等，全部深度支持，绝非简单集成。</li>
                 <li><strong>架构</strong>，云原生架构设计理念，接口正交化组合，同时支持多种第三方应用和多租户的快速接入能力。</li>
                 <li><strong>代码</strong>，顶级的代码强度和质量，近 10 万行代码全部通过 SonarQube 最严格的代码扫描，0 警告。</li>
-                <li><strong>支持</strong>，30 万字的线上文档和技术专栏，助您快速吃透橙单。活跃的 VIP 微信群技术支持，必要时可提供远程协助服务。</li>
+                <li><strong>支持</strong>，30 万字的线上文档和技术专栏，助您快速吃透数据建模。活跃的 VIP 微信群技术支持，必要时可提供远程协助服务。</li>
               </ul>
             </el-collapse-item>
             <el-collapse-item title="最新功能" name="2">
@@ -46,7 +46,7 @@
       <el-card class="box-card" style="min-width: 450px; margin-left: 20px;" shadow="never" :body-style="{padding: '0px 20px'}">
         <div class="item">
           <span style="width: 120px;">产品名称</span>
-          <el-tag effect="dark">橙单代码生成器</el-tag>
+          <el-tag effect="dark">数据建模代码生成器</el-tag>
         </div>
         <el-divider></el-divider>
         <div class="item">

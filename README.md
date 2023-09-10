@@ -1,4 +1,4 @@
-## 橙单代码生成器
+## 数据建模代码生成器
 ### 构建命令
 ``` bash
 # install dependencies

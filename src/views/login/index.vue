@@ -2,16 +2,15 @@
   <div class="login-form">
     <div class="logo-box">
       <img src="@/assets/img/login_logo.png" alt="">
-      <span>橙单低代码生成工具</span>
+      <span>数据建模低代码生成工具</span>
     </div>
     <div class="login-box">
       <div class="img-box">
-        <img class="img-title" src="@/assets/img/login_title.png" alt="">
         <img :src="bkImg" style="height: 100%; flex-shrink: 0" />
       </div>
       <div class="login-input">
         <span class="title">欢迎登录</span>
-        <span class="desc">橙单低代码生成演示工程</span>
+        <span class="desc">数据建模低代码生成演示工程</span>
         <el-form :model="dataForm" :rules="dataRule" size="medium" ref="dataForm" @keyup.enter.native="dataFormSubmit()">
           <el-col :span="24">
             <el-form-item prop="mobilePhone" label="用户名" style="margin-bottom: 12px;">

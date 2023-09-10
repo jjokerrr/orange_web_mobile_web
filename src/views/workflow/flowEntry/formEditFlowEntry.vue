@@ -5,7 +5,7 @@
         <el-row type="flex" justify="space-between">
           <el-col class="title header" :span="6" style="height: auto; line-height: auto;">
             <i class="header-logo logo online-icon icon-orange-icon" style="font-size: 40px;color: #FDA834;" />
-            <span style="font-size: 22px; color: #333333; font-weight: bold;">橙单流程设计</span>
+            <span style="font-size: 22px; color: #333333; font-weight: bold;">数据建模流程设计</span>
           </el-col>
           <div>
             <StepBar class="step" v-model="activeStep" style="margin-top: 14px">
