@@ -374,7 +374,7 @@ export default {
         this.$set(this.value[index].props, 'disabled', true);
         this.$set(this.value[index], 'display', true);
         this.variableDisplay.forEach(itemVariable => {
-          if (itemVariable.variableLabel === item.showName) {
+          if (itemVariable.variableId === item.column.columnId) {
             if (itemVariable.variableAuthority === '3') {
               this.$set(this.value[index].props, 'disabled', false);
               this.$set(this.value[index], 'display', false);

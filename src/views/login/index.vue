@@ -2,7 +2,7 @@
   <div class="login-form">
     <div class="logo-box">
       <img src="@/assets/img/login_logo.png" alt="">
-      <span>数据建模低代码生成工具</span>
+      <span>业务流程设计器</span>
     </div>
     <div class="login-box">
       <div class="img-box">
@@ -10,7 +10,7 @@
       </div>
       <div class="login-input">
         <span class="title">欢迎登录</span>
-        <span class="desc">数据建模低代码生成演示工程</span>
+        <span class="desc">业务流程设计器</span>
         <el-form :model="dataForm" :rules="dataRule" size="medium" ref="dataForm" @keyup.enter.native="dataFormSubmit()">
           <el-col :span="24">
             <el-form-item prop="mobilePhone" label="用户名" style="margin-bottom: 12px;">

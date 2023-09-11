@@ -437,6 +437,7 @@ export default {
       }
     }
   },
+  // 修改接口
   mounted () {
     if(this.tabType === 'attributeSet'){
       const mid = new Promise((resolve, reject) => {
@@ -446,12 +447,16 @@ export default {
           }
         }
         FlowEntryVariableController.list(this, params).then(res => {
-          this.SysFlowTaskNameList = res.data.dataList.map(item => {
-            return {
-              id: item.variableId,
-              name: item.showName
+          const nowSysFlowTaskNameList = []
+          this.SysFlowTaskNameList = res.data.dataList.forEach(item => {
+            if(item.bindColumnId) {
+              nowSysFlowTaskNameList.push({
+                id: item.bindColumnId,
+                name: item.showName
+              });
             }
           });
+          this.SysFlowTaskNameList = [...nowSysFlowTaskNameList];
           resolve();
         }).catch(e => {
           console.log(e);
