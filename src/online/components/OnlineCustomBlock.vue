@@ -369,6 +369,7 @@ export default {
   },
   // 增加接口
   mounted () {
+    console.log('显示信息：', this.value, '\n控制信息', this.variableDisplay);
     if (!this.isEdit) {
       this.value.map((item, index) => {
         this.$set(this.value[index].props, 'disabled', true);

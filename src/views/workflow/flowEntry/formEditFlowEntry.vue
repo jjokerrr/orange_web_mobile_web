@@ -203,7 +203,7 @@
           </el-col>
           <!-- 流程设计 -->
           <el-col v-if="activeStep === SysFlowEntryStep.PROCESS_DESIGN" class="main-box" :span="24" style="min-width: 1100px; padding: 0px">
-            <ProcessDesigner ref="ProcessDesigner" :useVariableMap="useVariableMap" :entryId="flowEntry.entryId" :flowEntryInfo="formFlowEntryData" @save="onSaveFlowEntry" />
+            <ProcessDesigner ref="ProcessDesigner" :useVariableMap="useVariableMap" :entryId="flowEntry?.entryId" :flowEntryInfo="formFlowEntryData" @save="onSaveFlowEntry" />
           </el-col>
         </el-row>
       </el-main>
@@ -284,6 +284,7 @@ export default {
   },
   data () {
     return {
+      addEntryId: undefined,
       useVariableMap: new Map(),
       entryDatasource: undefined,
       activeStep: this.SysFlowEntryStep.BASIC,
@@ -341,6 +342,10 @@ export default {
     getVariableDisplayInfo () {
       // 查询接口
       return new Promise((resolve, reject) => {
+        if (!this.flowEntry?.entryId) {
+          this.useVariableMap = new Map();
+          return;
+        }
         FlowVariableDisplayController.listByEntry(this, {entryId: this.flowEntry.entryId}).then(res => {
           const nowVariableMap = new Map();
           res.data.dataList.forEach(item => {
@@ -583,18 +588,25 @@ export default {
     // 修改接口
     saveFlowEntryInfo () {
       const variableDisplay = [];
-      console.log('当前变量map: ', this.useVariableMap);
-      this.useVariableMap.forEach((value, key) => {
-        value.forEach((item) => {
-          variableDisplay.push({
-            entryId: this.flowEntry.entryId,
-            taskKey: key,
-            variableId: item.id,
-            variableLabel: item.label,
-            variableAuthority: item.variableAuthority
-          });
-        })
-      });
+      if (this.activeStep === this.SysFlowEntryStep.PROCESS_DESIGN) {
+        this.useVariableMap.forEach((value, key) => {
+          let nowEntryId = null;
+          if (this.flowEntry?.entryId) {
+            nowEntryId = this.flowEntry?.entryId;
+          } else {
+            nowEntryId = this.addEntryId;
+          }
+          value.forEach((item) => {
+            variableDisplay.push({
+              entryId: nowEntryId,
+              taskKey: key,
+              variableId: item.id,
+              variableLabel: item.label,
+              variableAuthority: item.variableAuthority
+            });
+          })
+        });
+      }
       this.$set(this.formFlowEntryData, 'ifVariableDisplay', this.activeStep === this.SysFlowEntryStep.PROCESS_DESIGN)
       this.$set(this.formFlowEntryData, 'variableDisplay', [...variableDisplay]);
       if (this.formFlowEntryData.extensionData == null) {
@@ -612,7 +624,16 @@ export default {
           extensionData: JSON.stringify(this.formFlowEntryData.extensionData)
         }
       }
-      return this.isEdit ? FlowEntryController.update(this, params) : FlowEntryController.add(this, params);
+      let result = null;
+      if (this.isEdit) {
+        result = FlowEntryController.update(this, params);
+      } else {
+        result = FlowEntryController.add(this, params);
+        result.then((value) => {
+          this.addEntryId = value.data;
+        })
+      }
+      return result;
     },
     onSaveFlowEntry (xml) {
       this.formFlowEntryData.bpmnXml = xml;
@@ -628,11 +649,20 @@ export default {
             return item.id !== descInfo.id;
           });
         } else if (descInfo.operationType === 'add') {
-          variableList.push({
-            id: variableValue.id,
-            label: variableValue.label,
-            variableAuthority: variableValue.authority?.toString()
-          });
+          let sign = true;
+          variableList.forEach((item) => {
+            if (item.id === descInfo.id) {
+              item.variableAuthority = variableValue.authority?.toString()
+              sign = false;
+            }
+          })
+          if (sign) {
+            variableList.push({
+              id: variableValue.id,
+              label: variableValue.label,
+              variableAuthority: variableValue.authority?.toString()
+            })
+          }
         } else {
           for (let i = 0; i < variableList.length; i++) {
             if (variableList[i].id === descInfo.id) {

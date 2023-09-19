@@ -266,17 +266,25 @@ export default {
         }
       })
       if(sign) return;
-      this.formAttributeList.push({
-        id: res.id,
-        label: res.label,
-        variableAuthority: res.authority?.toString()
-      });
       const descInfo = {
         operationType: 'add',
         elementId: this.id,
         id: res.id
       }
       this.onUpdateVariableList(descInfo, res);
+      sign = true;
+      this.formAttributeList.forEach((item) => {
+        if(item.id === res.id){
+          sign = false;
+        }
+      });
+      if(sign){
+        this.formAttributeList.push({
+          id: res.id,
+          label: res.label,
+          variableAuthority: res.authority?.toString()
+        });
+      }
     },
     onDeleteOperationAuthority(operation) {
       this.$confirm('是否删除此按钮？').then(res => {
