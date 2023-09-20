@@ -386,6 +386,8 @@ export default {
   },
   methods: {
     saveForm () {
+      debugger
+      console.log(this.currentForm)
       this.$emit('updateForm', this.currentForm);
     },
     onCreateNewForm () {
@@ -432,6 +434,7 @@ export default {
       }
     },
     getRelationType (relationType) {
+      // debugger
       switch (relationType) {
         case this.SysOnlineRelationType.ONE_TO_ONE: return 'primary';
         case this.SysOnlineRelationType.ONE_TO_MANY: return 'warning';

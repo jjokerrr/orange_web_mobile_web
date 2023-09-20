@@ -340,6 +340,7 @@ export default {
       return temp;
     },
     updateFormInfo (currentForm) {
+      debugger
       let formConfig = {
         pc: {
           gutter: currentForm.pc.gutter,
@@ -361,6 +362,8 @@ export default {
           advanceQuery: currentForm.pc.advanceQuery
         }
       }
+      console.log('formConfig')
+      console.log(formConfig)
       let params = {
         onlineFormDto: {
           pageId: currentForm.pageId,
@@ -374,11 +377,23 @@ export default {
           datasourceIdList: [this.getPageDatasource.datasourceId]
         }
       }
+      debugger
+      // 获取表单组件绑定的全部数据表column，检查组件是否绑定的重复元素
+      let widgetColumn = formConfig.pc.widgetList.map((widget) => widget.bindData.columnId);
+      console.log(widgetColumn)
+      const hasDuplicates = widgetColumn.some((value, index) => {
+        return widgetColumn.indexOf(value) !== index;
+      });
+      if (hasDuplicates) {
+        this.$message.error('保存失败，存在重复字段')
+        return; // 停止执行后续代码
+      }
       let httpCall = OnlineFormController.update(this, params);
       httpCall.then(res => {
         this.$message.success('保存成功');
         this.initPageFormList(this.formPageData.pageId).catch(e => {});
       }).catch(e => {});
+      // 调用表单字段存储接口
     },
     onClose () {
       if (this.showSaveButton) {
@@ -394,6 +409,7 @@ export default {
       }
     },
     onSaveClick () {
+      debugger
       if (this.activeStep === this.SysOnlinePageSettingStep.FORM_DESIGN) {
         if (this.$refs.formDesign) this.$refs.formDesign.saveForm();
       } else if (this.activeStep === this.SysOnlinePageSettingStep.DATASOURCE) {

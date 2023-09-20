@@ -191,6 +191,7 @@ export default {
     },
     // 提交表单数据
     onSaveFormData () {
+      debugger
       if (this.masterTable == null || this.masterTable.datasource == null) {
         this.$message.error('表单使用主数据源或主表不存在！');
         return;
