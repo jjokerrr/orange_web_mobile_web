@@ -9,7 +9,7 @@
           <div class="logo" v-if="!getMultiColumn" style="margin-right: 8px;padding-left: 8px">
             <img src="@/assets/img/login_logo.png" alt="">
           </div>
-          <div class="title">
+          <div class="title" style="font-size: 20px;">
             {{ projectName }}
           </div>
           <breadcrumb class="breadcrumb-container" />

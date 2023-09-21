@@ -38,7 +38,7 @@
                 >
                   <OnlineCustomBlock :ref="subWidget.variableName"
                     v-model="subWidget.childWidgetList"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     @widgetClick="onWidgetClick"
                   />
                 </div>
@@ -48,7 +48,7 @@
                   <OnlineBaseCard
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     @widgetClick="onWidgetClick"
                   />
                 </div>
@@ -58,7 +58,7 @@
                   <OnlineCustomTabs
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     @widgetClick="onWidgetClick"
                   />
                 </div>
@@ -69,7 +69,7 @@
                   <OnlineCustomTableContainer
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     @widgetClick="onWidgetClick"
                   />
                 </div>
@@ -80,7 +80,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="getWidgetValue(subWidget)"
                     @input="(val) => onValueChange(subWidget, val)"
                     @change="(val, detail) => onWidgetValueChange(subWidget, val, detail)"
@@ -94,7 +94,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="getWidgetValue(subWidget)"
                     @input="(val) => onValueChange(subWidget, val)"
                     @change="(val, detail) => onWidgetValueChange(subWidget, val, detail)"
@@ -108,7 +108,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="getWidgetValue(subWidget)"
                     @input="(val) => onValueChange(subWidget, val)"
                     @change="(val, detail) => onWidgetValueChange(subWidget, val, detail)"
@@ -122,7 +122,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="getWidgetValue(subWidget)"
                     @input="(val) => onValueChange(subWidget, val)"
                     @change="(val, detail) => onWidgetValueChange(subWidget, val, detail)"
@@ -136,7 +136,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -148,7 +148,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -160,7 +160,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -172,7 +172,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -184,7 +184,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -196,7 +196,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -208,7 +208,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -220,7 +220,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -232,7 +232,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -244,7 +244,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -256,7 +256,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -268,7 +268,7 @@
                   <OnlineCustomWidget
                     :ref="subWidget.variableName"
                     :widget="subWidget"
-                    :isEdit="isEdit"
+                    :isEdit="!subWidget.props.disabled"
                     :value="undefined"
                     @widgetClick="onWidgetClick"
                   />
@@ -277,7 +277,7 @@
                   v-else-if="subWidget.widgetType === SysCustomWidgetType.Text"
                   :ref="subWidget.variableName"
                   :widget="subWidget"
-                  :isEdit="isEdit"
+                  :isEdit="!subWidget.props.disabled"
                   :value="getWidgetValue(subWidget) || subWidget.props.text"
                   :style="{'margin-bottom': (subWidget.props.paddingBottom || 0) + 'px'}"
                   @widgetClick="onWidgetClick"
@@ -286,7 +286,7 @@
                   v-else-if="subWidget.widgetType === SysCustomWidgetType.Image"
                   :ref="subWidget.variableName"
                   :widget="subWidget"
-                  :isEdit="isEdit"
+                  :isEdit="!subWidget.props.disabled"
                   :value="getWidgetValue(subWidget)"
                   :src="subWidget.props.src"
                   :style="{'margin-bottom': (subWidget.props.paddingBottom || 0) + 'px'}"
@@ -369,29 +369,24 @@ export default {
   },
   // 增加接口
   mounted () {
-    if (this.isEdit) {
+    if (!this.isEdit) {
       this.value.map((item, index) => {
-        this.$set(this.value[index], 'disabled', true);
-        this.$set(this.value[index], 'dealForm', true);
+        this.$set(this.value[index].props, 'disabled', true);
         this.$set(this.value[index], 'display', true);
         this.variableDisplay.forEach(itemVariable => {
-          if (itemVariable.variableLabel === item.showName) {
+          if (itemVariable.variableId === item.column.columnId) {
             if (itemVariable.variableAuthority === '3') {
-              this.$set(this.value[index], 'disabled', false);
-              this.$set(this.value[index], 'dealForm', false);
+              this.$set(this.value[index].props, 'disabled', false);
               this.$set(this.value[index], 'display', false);
             } else if (itemVariable.variableAuthority === '2') {
-              this.$set(this.value[index], 'disabled', false);
-              this.$set(this.value[index], 'dealForm', false);
-            } else {
+              this.$set(this.value[index].props, 'disabled', false);
             }
           }
         });
       })
     } else {
       this.value.map((item, index) => {
-        this.$set(this.value[index], 'disabled', true);
-        this.$set(this.value[index], 'dealForm', true);
+        this.$set(this.value[index].props, 'disabled', false);
         this.$set(this.value[index], 'display', true);
       })
     }

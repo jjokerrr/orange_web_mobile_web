@@ -6,7 +6,7 @@
           <el-row type="flex" align="middle" style="height: 100%; width: 100%; justify-content: space-between;">
             <div style="height: 40px; line-height: 40px; display: flex">
               <i class="header-logo online-icon icon-orange-icon" style="font-size: 40px; color: #FDA834; background: rgba(255,119,0,0.1);" />
-              <span style="font-size: 22px; color: #333333; font-weight: bold;">橙单</span>
+              <span style="font-size: 22px; color: #333333; font-weight: bold;">数据建模</span>
               <el-divider direction="vertical" style="height: 26px; margin: 7px 8px;" />
               <span style="font-weight: bold; color: #333333; font-size: 18px;">{{form.formName}}</span>
             </div>

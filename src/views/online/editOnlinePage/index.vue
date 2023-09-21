@@ -4,7 +4,7 @@
       <el-row type="flex" justify="space-between" align="middle" style="height: 100%">
         <div class="title" style="width: 200px; height: 40px; line-height: 40px; display: flex">
           <i class="header-logo logo online-icon icon-orange-icon" style="font-size: 40px;" />
-          <span style="font-size: 22px; color: #333333; font-weight: bold;">橙单在线表单</span>
+          <span style="font-size: 22px; color: #333333; font-weight: bold;">在线表单设计</span>
         </div>
         <StepBar class="step" v-model="activeStep">
           <StepBarItem icon="online-icon icon-basic-info" :name="SysOnlinePageSettingStep.BASIC">基础信息</StepBarItem>

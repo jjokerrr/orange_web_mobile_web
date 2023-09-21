@@ -1,4 +1,4 @@
 module.exports = {
-  baseUrl: 'http://localhost:8082/',
-  projectName: '橙单项目'
+  baseUrl: 'http://10.109.252.70:8082/',
+  projectName: '业务流程设计器'
 }
