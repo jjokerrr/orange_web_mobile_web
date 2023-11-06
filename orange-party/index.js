@@ -5,14 +5,14 @@ window.jQuery = $
 
 const layer = require('layui-layer')
 export default {
-  data() {
+  data () {
     return {
       dialogMap: new Map()
     }
   },
   methods: {
     // 发送消息
-    postMessage(sender, type, data) {
+    postMessage (sender, type, data) {
       if (sender != null && type != null) {
         sender.postMessage({
           type,
@@ -21,7 +21,7 @@ export default {
       }
     },
     // 打开弹窗
-    handlerOpenDialog(data, event) {
+    handlerOpenDialog (data, event) {
       const this_ = this
       let area = [data.width || '40vw', data.height || '70vh']
       if (data.dlgFullScreen) {
@@ -37,7 +37,7 @@ export default {
         zIndex: data.zIndex || 1000,
         index: 0,
         content: data.url,
-        success: function(res, index) {
+        success: function (res, index) {
           this_.dialogMap.set(index, {
             source: event.source
           })
@@ -53,7 +53,7 @@ export default {
       })
     },
     // 关闭弹窗
-    handlerCloseDialog(data) {
+    handlerCloseDialog (data) {
       if (data != null) {
         const dialog = this.dialogMap.get(data.dialogKey)
         if (dialog && dialog.source) {
@@ -64,16 +64,16 @@ export default {
       }
     },
     // 刷新token
-    handlerRefreshToken(data, event) {
+    handlerRefreshToken (data, event) {
       this.postMessage(event.source, 'setToken', {
         token: getToken()
       })
     },
     // 通知消息，例如成功、错误通知等
-    handlerUIMessage(data, event) {
+    handlerUIMessage (data, event) {
       this.$message[data.type](data.text)
     },
-    handlerMessage(type, data, event) {
+    handlerMessage (type, data, event) {
       switch (type) {
         // 打开弹窗
         case 'openDialog':
@@ -92,15 +92,15 @@ export default {
           this.handlerUIMessage(data, event)
       }
     },
-    eventListener(e) {
+    eventListener (e) {
       if (e.data == null) return
       this.handlerMessage(e.data.type, e.data.data, e)
     }
   },
-  created() {
+  created () {
     window.addEventListener('message', this.eventListener, false)
   },
-  destoryed() {
+  destoryed () {
     window.removeEventListener('message', this.eventListener)
   }
 }
