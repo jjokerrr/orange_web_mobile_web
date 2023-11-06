@@ -59,7 +59,33 @@ const routers = [
           // 静态表单路由设置
         ]
       },
-      {path: 'welcome', component: _import('welcome/index'), name: 'welcome', meta: {title: '欢迎'}}
+      // 移动端管理
+      {
+        path: 'formSudoku',
+        component: _import('mobile/formMobileEntry/formSudoku'),
+        name: 'formSudoku',
+        props: {
+          entryType: 1
+        },
+        meta: {title: '九宫格配置'}
+      },
+      {
+        path: 'formBanner',
+        component: _import('mobile/formMobileEntry/formBanner'),
+        name: 'formBanner',
+        props: {
+          entryType: 0
+        },
+        meta: {title: '轮播图配置配置'}
+      },
+      {path: 'welcome', component: _import('welcome/index'), name: 'welcome', meta: {title: '欢迎'}},
+      {
+        path: 'demo',
+        component: _import('generated/demo'),
+        name: 'demo',
+        props: getProps,
+        meta: {title: 'demo'}
+      }
     ]
   },
   // 第三方接入路由

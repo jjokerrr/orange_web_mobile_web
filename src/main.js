@@ -1,6 +1,6 @@
 import '@/core/http';
 import JSONbig from 'json-bigint';
-import '@/components/Dialog';
+import Dialog from '@/components/Dialog';
 import Vue from 'vue';
 import ElementUI from 'element-ui';
 // import 'element-ui/lib/theme-chalk/index.css'
@@ -25,6 +25,8 @@ import VXETable from 'vxe-table';
 
 import 'vxe-table/lib/style.css';
 import '@/assets/online-icon/iconfont.css';
+import Vant from 'vant';
+import 'vant/lib/index.css';
 import OnlineCustomBlock from '@/online/components/OnlineCustomBlock.vue';
 import OnlineBaseCard from '@/online/components/OnlineBaseCard.vue';
 import OnlineCustomTabs from '@/online/components/OnlineCustomTabs.vue';
@@ -41,8 +43,9 @@ Vue.component('OnlineBaseCard', OnlineBaseCard);
 Vue.component('OnlineCustomTabs', OnlineCustomTabs);
 Vue.component('OnlineCustomTableContainer', OnlineCustomTableContainer);
 
+Vue.use(Vant);
 Vue.use(VXETable);
-window.JSON = new JSONbig({ storeAsString: true });
+window.JSON = new JSONbig({storeAsString: true});
 Vue.component('tree-select', TreeSelect);
 Vue.component('rich-editor', RichEditor);
 Vue.component('input-number-range', InputNumberRange);
@@ -62,6 +65,7 @@ Vue.use(ElementUI);
 Vue.use(VCharts);
 
 Vue.config.productionTip = false;
+Vue.prototype.$dialog = Dialog;
 /* eslint-disable no-new */
 const vm = new Vue({
   router,

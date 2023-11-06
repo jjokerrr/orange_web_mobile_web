@@ -164,11 +164,9 @@ export default {
         if (this.treeRowKey != null) {
           let nodeList = [];
           traverseTree(this.$attrs.data, (node) => nodeList.push(node), 'children');
-          console.log(nodeList);
           let defaultExpandRows = nodeList.filter(row => {
             return this.expandRows.indexOf(row[this.treeRowKey]) !== -1;
           });
-          console.log(defaultExpandRows, this.expandRows);
           this.expandRows = defaultExpandRows.map(item => item[this.treeRowKey]);
           if (this.$refs.table) {
             this.$nextTick(() => {

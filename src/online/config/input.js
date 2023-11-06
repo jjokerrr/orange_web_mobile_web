@@ -11,7 +11,7 @@ const input = {
     widgetType: SysCustomWidgetType.Slider,
     value: 12,
     visible: function (formConfig) {
-      return formConfig && formConfig.form.formType !== SysOnlineFormType.QUERY;
+      return formConfig && formConfig.form.formType !== SysOnlineFormType.QUERY && formConfig.activeMode === 'pc';
     },
     disabled: false,
     min: 1,
@@ -20,17 +20,48 @@ const input = {
   type: {
     name: '输入框类型',
     value: 'text',
-    widgetType: SysCustomWidgetType.Radio,
-    dropdownList: [
-      {
-        id: 'text',
-        name: '单行文本'
-      },
-      {
-        id: 'textarea',
-        name: '多行文本'
+    widgetType: SysCustomWidgetType.Select,
+    dropdownList: function (formConfig) {
+      if (formConfig && formConfig.activeMode === 'mobile') {
+        return [
+          {
+            id: 'text',
+            name: '单行文本'
+          },
+          {
+            id: 'textarea',
+            name: '多行文本'
+          },
+          {
+            id: 'digit',
+            name: '整数'
+          },
+          {
+            id: 'number',
+            name: '数字'
+          },
+          {
+            id: 'tel',
+            name: '手机号'
+          },
+          {
+            id: 'password',
+            name: '密码'
+          }
+        ];
+      } else {
+        return [
+          {
+            id: 'text',
+            name: '单行文本'
+          },
+          {
+            id: 'textarea',
+            name: '多行文本'
+          }
+        ];
       }
-    ]
+    }
   },
   placeholder: {
     name: '占位文本',
@@ -92,7 +123,7 @@ const input = {
     name: '是否禁用',
     value: false,
     visible: function (formConfig) {
-      return formConfig && formConfig.form.formType !== SysOnlineFormType.QUERY;
+      return formConfig && (formConfig.form.formType !== SysOnlineFormType.QUERY || formConfig.activeMode === 'mobile');
     },
     widgetType: SysCustomWidgetType.Switch,
     dropdownList: [

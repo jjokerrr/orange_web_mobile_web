@@ -10,6 +10,39 @@ const radio = {
     min: 1,
     max: 24
   },
+  dictInfo: {
+    name: '下拉字典',
+    value: {},
+    customComponent: {
+      component: 'CustomWidgetDictSetting'
+    }
+  },
+  direction: {
+    name: '选项排列方式',
+    widgetType: SysCustomWidgetType.Radio,
+    value: 'horizontal',
+    visible: function (formConfig) {
+      return formConfig && formConfig.activeMode === 'mobile';
+    },
+    dropdownList: [
+      {
+        id: 'horizontal',
+        name: '横向排列'
+      },
+      {
+        id: 'vertical',
+        name: '纵向排列'
+      }
+    ]
+  },
+  'icon-size': {
+    name: '图标大小',
+    visible: function (formConfig) {
+      return formConfig && formConfig.activeMode === 'mobile';
+    },
+    widgetType: SysCustomWidgetType.Input,
+    value: '20px'
+  },
   supportAll: {
     name: '全部选项',
     widgetType: SysCustomWidgetType.Switch,
@@ -23,13 +56,6 @@ const radio = {
         name: '隐藏'
       }
     ]
-  },
-  dictInfo: {
-    name: '下拉字典',
-    value: {},
-    customComponent: {
-      component: 'CustomWidgetDictSetting'
-    }
   },
   required: {
     name: '是否必填',

@@ -77,6 +77,7 @@ export default {
      * @returns {object} 取出的值
      */
     getColumnValue (row, columnNameList) {
+      if (row == null) return undefined;
       if (Array.isArray(columnNameList)) {
         let dataValue = columnNameList.length > 0 ? row : undefined;
 

@@ -13,7 +13,7 @@
     >
       {{ title }}
     </el-col>
-    <el-col class="progress-bar-container" :span="24">
+    <el-col v-if="data.dataList && data.dataList.length > 0" class="progress-bar-container" :span="24">
       <div
         class="progress-container"
         v-for="(item, index) in data.dataList"
@@ -40,6 +40,24 @@
             class="text"
             v-html="outerTextFormat(percentage(item), item)"
           ></div>
+        </div>
+      </div>
+      </el-col>
+    <el-col v-else class="progress-bar-container" :span="24">
+      <div class="progress-container">
+        <el-progress
+        type="line"
+        :percentage="10"
+        :define-back-color="options.seriesSetting.defineBackColor"
+        :stroke-width="options.seriesSetting.strokeWidth"
+        :show-text="options.seriesSetting.showText"
+        :text-inside="true"
+        :text-color="options.seriesSetting.textStyle.color"
+        :color="options.seriesSetting.color"
+        :format="() => ''"
+      />
+        <div class="progress-text" :style="getProgressTextStyle">
+          <div class="text">10%</div>
         </div>
       </div>
     </el-col>

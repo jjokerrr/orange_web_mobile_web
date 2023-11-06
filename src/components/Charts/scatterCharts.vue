@@ -4,6 +4,7 @@
 
 <script>
 import chartMixins from './chartMixins.js';
+import {scatterChartData as defaultData} from './defaultData'
 import * as echarts from 'echarts';
 import {
   getDefaultGrid,
@@ -96,7 +97,8 @@ export default {
         if (this.data.length === 0) {
           this.echarts.clear();
         }
-        this.echarts.setOption(buildChartOptions(this, this.scatterOptions), true);
+        const options = buildChartOptions(this, this.scatterOptions)
+        this.echarts.setOption(options, true);
         this.echarts.resize();
       }
     },
@@ -152,8 +154,9 @@ export default {
       return [];
     },
     series () {
+      let arr = []
       if (Array.isArray(this.valueColumnList) && Array.isArray(this.data)) {
-        return this.valueColumnList.map((valueItem, index) => {
+        arr = this.valueColumnList.map((valueItem, index) => {
           let serieData = this.categrayColumnData.map((xValue, i) => {
             let yValue = this.getRowDataByColumnName(this.data[i], valueItem.columnName);
             let symbolSize = this.options.series.itemSize;
@@ -179,7 +182,13 @@ export default {
           }
         });
       }
-      return [];
+      return arr.length > 0 ? arr : [{
+        name: 'test',
+        ...defaultScatterOptions,
+        ...this.options.series,
+        symbolSize: this.options.series.itemSize,
+        data: defaultData
+      }]
     },
     scatterOptions () {
       let options = {

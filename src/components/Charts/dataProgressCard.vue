@@ -130,7 +130,6 @@ export default {
     getNumTextStyle () {
       return this.getTextStyle('numTextStyle');
     },
-
     getProgressTextStyle () {
       return {
         color: this.options.seriesSetting.progress.textStyle.color,

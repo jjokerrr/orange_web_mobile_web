@@ -17,6 +17,7 @@ funnelOptions<br><br>
 
 <script>
 import chartMixins from './chartMixins.js';
+import {funnelChartData as defaultData} from './defaultData'
 import * as echarts from 'echarts';
 import {
   getDefaultLabel,
@@ -94,8 +95,8 @@ export default {
         if (this.data.length === 0) {
           this.echarts.clear();
         }
-
-        this.echarts.setOption(buildChartOptions(this, this.funnelOptions), true);
+        const options = buildChartOptions(this, this.funnelOptions)
+        this.echarts.setOption(options, true);
         this.echarts.resize();
       }
     },
@@ -177,7 +178,8 @@ export default {
       }
 
       if (Array.isArray(this.valueColumnList) && Array.isArray(this.data)) {
-        return this.valueColumnList.map((valueItem, index) => {
+        let arr = []
+        arr = this.valueColumnList.map((valueItem, index) => {
           let lineData = this.data.map(dataItem => {
             let xx = this.getRowDataByColumnName(dataItem, valueItem.columnName);
             return {
@@ -185,7 +187,6 @@ export default {
               name: this.getCategoryColumnValue(dataItem, this.categrayColumnList)
             };
           });
-          
           return {
             name: this.legendData[index],
             ...defaultfunnelOptions,
@@ -194,6 +195,13 @@ export default {
             data: lineData
           }
         });
+        return arr.length > 0 ? arr : [{
+          name: 'test',
+          ...defaultfunnelOptions,
+          ...series,
+          label: this.label,
+          data: defaultData
+        }]
       } else {
         let seriesList = [];
 
@@ -213,8 +221,14 @@ export default {
           label: this.label,
           data: tmp
         })
-        
-        return seriesList;
+
+        return seriesList.length > 0 ? seriesList : [{
+          name: 'test',
+          ...defaultfunnelOptions,
+          ...series,
+          label: this.label,
+          data: defaultData
+        }];
       }
     },
     funnelOptions () {

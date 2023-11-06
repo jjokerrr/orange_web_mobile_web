@@ -4,7 +4,8 @@
       :style="{'min-height': isEdit ? height : '0px'}"
     >
       <el-scrollbar style="height: 100%;" class="custom-scroll">
-        <el-form ref="form" :model="formData" class="full-width-input"
+        <component :is="mode === 'pc' ? 'el-form' : 'van-form'"
+          ref="form" :model="formData" class="full-width-input"
           :rules="rules" style="width: 100%;"
           :label-width="(form.labelWidth || 100) + 'px'"
           :label-position="form.labelPosition || 'right'"
@@ -12,7 +13,7 @@
           @submit.native.prevent
         >
           <OnlineCustomBlock v-show="isReady" ref="root" v-model="form.widgetList" :variableDisplay="variableDisplay" :height="height" :isEdit="isEdit" :showBorder="false" @widgetClick="onWidgetClick" />
-        </el-form>
+        </component>
       </el-scrollbar>
     </div>
   </div>
@@ -69,6 +70,7 @@ export default {
       form: () => {
         return {
           ...this.form,
+          mode: this.mode,
           isEdit: this.isEdit,
           readOnly: this.readOnly,
           getWidgetValue: this.getWidgetValue,
@@ -164,6 +166,10 @@ export default {
               } else {
                 relationNameList.set(table.relation.variableName + 'List', table.relation);
               }
+              this.formData[table.relation.variableName] = table.columnList.reduce((retObj, column) => {
+                retObj[column.columnName] = undefined;
+                return retObj;
+              }, {});
             } else if (table.relation == null) {
               datasourceName = table.datasource.variableName;
             }
@@ -189,7 +195,12 @@ export default {
                 }
               }
               if (masterData[key]) {
-                this.formData[relationVariableName] = masterData[key];
+                if (!Array.isArray(masterData[key])) {
+                  this.formData[relationVariableName] = {
+                    ...this.formData[relationVariableName],
+                    ...masterData[key]
+                  };
+                }
               }
             }
           });

@@ -1,20 +1,58 @@
 <template>
-  <component :ref="widget.variableName" :is="getComponent" v-bind="getWidgetProps" :style="getWidgetStyle"
-    :disabled="getDisabledStatus()" :value="bindValue" @input="onValueInput" @change="onValueChange"
-    @widgetClick="onWidgetClick" :class="{ 'number-center': SysCustomWidgetType.NumberInput === widget.widgetType }">
-    <template v-if="widget.widgetType === SysCustomWidgetType.Radio">
-      <el-radio v-for="item in getAllDropdownData" :key="item.id" :label="item.id">{{ item.name }}</el-radio>
+  <component
+    :ref="widget.variableName"
+    :is="getComponent"
+    v-bind="getWidgetProps"
+    :style="getWidgetStyle"
+    :disabled="getDisabledStatus()"
+    :value="bindValue"
+    @input="onValueInput"
+    @change="onValueChange"
+    @widgetClick="onWidgetClick"
+    :class="{'number-center': SysCustomWidgetType.NumberInput === widget.widgetType}"
+  >
+    <template v-if="form().mode === 'pc'">
+      <template v-if="widget.widgetType === SysCustomWidgetType.Radio">
+        <el-radio v-for="item in getAllDropdownData" :key="item.id" :label="item.id">
+          {{item.name}}
+        </el-radio>
+      </template>
+      <template v-else-if="widget.widgetType === SysCustomWidgetType.CheckBox">
+        <el-checkbox v-for="item in getAllDropdownData" :key="item.id" :label="item.id">
+          {{item.name}}
+        </el-checkbox>
+      </template>
+      <template v-else-if="widget.widgetType === SysCustomWidgetType.Select">
+        <el-option v-for="item in getAllDropdownData" :key="item.id" :label="item.name" :value="item.id" />
+      </template>
+      <template v-if="widget.widgetType === SysCustomWidgetType.Link">
+        <span>{{widget.props.showText || widget.showName}}</span>
+      </template>
     </template>
-    <template v-else-if="widget.widgetType === SysCustomWidgetType.CheckBox">
-      <el-checkbox v-for="item in getAllDropdownData" :key="item.id" :label="item.id">
-        {{ item.name }}
-      </el-checkbox>
+    <template v-if="form().mode === 'mobile' && widget.widgetType !== SysCustomWidgetType.Input" #input>
+      <van-radio-group v-if="SysCustomWidgetType.Radio === widget.widgetType" v-model="tempValue" v-bind="getWidgetProps">
+        <van-radio :class="{'van-vertical-item': getWidgetProps.direction === 'vertical'}"
+          v-for="item in getAllDropdownData" :key="item.id" :name="item.id"
+        >
+          {{item.name}}
+        </van-radio>
+      </van-radio-group>
+      <van-checkbox-group v-if="SysCustomWidgetType.CheckBox === widget.widgetType" v-model="tempValue" v-bind="getWidgetProps">
+        <van-checkbox :class="{'van-vertical-item': getWidgetProps.direction === 'vertical'}"
+          v-for="item in getAllDropdownData" :key="item.id" :name="item.id"
+          v-bind="getWidgetProps" shape="square"
+        >
+          {{item.name}}
+        </van-checkbox>
+      </van-checkbox-group>
+      <van-rate v-model="tempValue" v-if="SysCustomWidgetType.Rate === widget.widgetType" v-bind="getWidgetProps" />
+      <van-switch v-model="tempValue" v-if="SysCustomWidgetType.Switch === widget.widgetType" v-bind="getWidgetProps" />
+      <van-uploader v-if="SysCustomWidgetType.Upload === widget.widgetType && isUploadImage" v-bind="getWidgetProps" :deletable="true" />
+      <van-button v-if="SysCustomWidgetType.Upload === widget.widgetType && !isUploadImage" icon="plus" type="info" size="small">上传文件</van-button>
+      <van-stepper v-model="tempValue" v-if="SysCustomWidgetType.Stepper === widget.widgetType" v-bind="getWidgetProps" />
     </template>
-    <template v-else-if="widget.widgetType === SysCustomWidgetType.Select">
-      <el-option v-for="item in getAllDropdownData" :key="item.id" :label="item.name" :value="item.id" />
-    </template>
-    <template v-if="widget.widgetType === SysCustomWidgetType.Link">
-      <span>{{ widget.props.showText || widget.showName }}</span>
+    <template v-if="form().mode === 'mobile' && showRightIcon" #right-icon>
+      <i class="van-icon van-icon-arrow van-cell__right-icon" />
     </template>
   </component>
 </template>
@@ -28,6 +66,11 @@ import OnlineCustomChart from './OnlineCustomChart.vue';
 import OnlineCustomDataSelect from './OnlineCustomDataSelect/index.vue';
 import OnlineCustomText from './OnlineCustomText.vue';
 import OnlineCustomImage from './OnlineCustomImage.vue';
+import OnlineMobileSelectFilter from './mobile/MobileSelectFilter.vue';
+import OnlineMobileInputFilter from './mobile/MobileInputFilter.vue';
+import OnlineMobileSwitchFilter from './mobile/MobileSwitchFilter.vue';
+import OnlineMobileDateRangeFilter from './mobile/MobileDateRangeFilter.vue';
+import OnlineMobileNumbrRangeFilter from './mobile/MobileNumberRangeFilter.vue';
 
 export default {
   name: 'OnlineCustomWidget',
@@ -47,13 +90,26 @@ export default {
     'online-custom-chart': OnlineCustomChart,
     'online-custom-dataselect': OnlineCustomDataSelect,
     'online-custom-text': OnlineCustomText,
-    'online-custom-image': OnlineCustomImage
+    'online-custom-image': OnlineCustomImage,
+    'online-mobile-select-filter': OnlineMobileSelectFilter,
+    'online-mobile-input-filter': OnlineMobileInputFilter,
+    'online-mobile-switch-filter': OnlineMobileSwitchFilter,
+    'online-mobile-date-range-filter': OnlineMobileDateRangeFilter,
+    'online-mobile-number-range-filter': OnlineMobileNumbrRangeFilter
   },
-  inject: ['form'],
+  inject: {
+    form: {
+      default: ''
+    },
+    parentWidget: {
+      default: null
+    }
+  },
   data () {
     return {
       valueData: [],
-      dictDataList: []
+      dictDataList: [],
+      tempValue: undefined
     }
   },
   methods: {
@@ -128,7 +184,6 @@ export default {
     },
     onValueChange (val, selectRow) {
       let tempVal = this.parseValue(val);
-      // console.log(tempVal)
       let dictData = null;
       if (this.multiSelect) {
         dictData = val.map(item => {
@@ -187,12 +242,13 @@ export default {
         this.SysCustomWidgetType.CheckBox,
         this.SysCustomWidgetType.Radio,
         this.SysCustomWidgetType.Cascader,
-        this.SysCustomWidgetType.Tree
+        this.SysCustomWidgetType.Tree,
+        this.SysCustomWidgetType.MobileCheckBoxFilter,
+        this.SysCustomWidgetType.MobileRadioFilter
       ].indexOf(this.widget.widgetType) !== -1;
     },
     bindValue () {
       let tempValue = this.value ? this.value : this.getWidgetProps.value;
-      // console.log('tempValue' + tempValue);
       if (this.isDictWidget) tempValue = tempValue == null ? '' : (tempValue + '');
       if (this.multiSelect && this.value && typeof tempValue === 'string') {
         tempValue = tempValue.split(',');
@@ -203,7 +259,7 @@ export default {
         }
       }
       if (this.widget.widgetType === this.SysCustomWidgetType.CheckBox) {
-        return tempValue || [];
+        return this.form().mode === 'mobile' ? undefined : (tempValue || []);
       } else if (this.widget.widgetType === this.SysCustomWidgetType.Cascader) {
         if (this.multiSelect) {
           // 多选
@@ -244,6 +300,16 @@ export default {
       }
       return temp;
     },
+    isMobileFilter () {
+      return [
+        this.SysCustomWidgetType.MobileRadioFilter,
+        this.SysCustomWidgetType.MobileCheckBoxFilter,
+        this.SysCustomWidgetType.MobileInputFilter,
+        this.SysCustomWidgetType.MobileDateRangeFilter,
+        this.SysCustomWidgetType.MobileNumberRangeFilter,
+        this.SysCustomWidgetType.MobileSwitchFilter
+      ].indexOf(this.widget.widgetType) !== -1;
+    },
     getWidgetProps () {
       let props = {
         ...this.widget.props || {}
@@ -258,13 +324,15 @@ export default {
         filterable: true,
         readOnly: this.widget.widgetType === this.SysCustomWidgetType.Upload ? (this.form().readOnly || props.readOnly) : undefined,
         options: this.widget.widgetType === this.SysCustomWidgetType.Cascader ? this.dictDataList : undefined,
-        props: this.widget.widgetType === this.SysCustomWidgetType.Cascader ? { label: 'name', value: 'id', multiple: this.multiSelect, checkStrictly: true } : undefined,
+        props: this.widget.widgetType === this.SysCustomWidgetType.Cascader ? {label: 'name', value: 'id', multiple: this.multiSelect, checkStrictly: true} : undefined,
         'picker-options': this.widget.widgetType === this.SysCustomWidgetType.Date ? { disabledDate: (this.widget.eventInfo || {})[this.OnlineFormEventType.DISABLED_DATE] } : undefined,
         operationList: this.widget.operationList,
         multiple: this.multiSelect,
         'collapse-tags': this.multiSelect,
         dataList: this.widget.widgetType === this.SysCustomWidgetType.Tree ? this.dictDataList : undefined,
+        dictDataList: this.isMobileFilter ? this.getAllDropdownData : undefined,
         href: this.getLinkHerf,
+        label: (this.form().mode === 'mobile' && (this.getComponent === 'van-field' || this.isMobileFilter)) ? this.widget.showName : undefined,
         widget: this.widget
       };
     },
@@ -279,29 +347,33 @@ export default {
         this.form().readOnly) {
         return 'online-custom-label';
       }
+      let mode = this.form().mode;
       switch (this.widget.widgetType) {
         case this.SysCustomWidgetType.Label: return 'online-custom-label';
-        case this.SysCustomWidgetType.Input: return 'el-input';
+        case this.SysCustomWidgetType.Input: return mode !== 'pc' ? 'van-field' : 'el-input';
         case this.SysCustomWidgetType.NumberInput: return 'el-input-number';
         case this.SysCustomWidgetType.NumberRange: return 'input-number-range';
-        case this.SysCustomWidgetType.Switch: return 'el-switch';
-        case this.SysCustomWidgetType.Radio: return 'el-radio-group';
-        case this.SysCustomWidgetType.CheckBox: return 'el-checkbox-group';
-        case this.SysCustomWidgetType.Select: return 'el-select';
-        case this.SysCustomWidgetType.Cascader: return 'el-cascader';
-        case this.SysCustomWidgetType.Date: return 'el-date-picker';
+        case this.SysCustomWidgetType.Switch: return mode !== 'pc' ? 'van-field' : 'el-switch';
+        case this.SysCustomWidgetType.Radio: return mode !== 'pc' ? 'van-field' : 'el-radio-group';
+        case this.SysCustomWidgetType.CheckBox: return mode !== 'pc' ? 'van-field' : 'el-checkbox-group';
+        case this.SysCustomWidgetType.Select: return mode !== 'pc' ? 'van-field' : 'el-select';
+        case this.SysCustomWidgetType.Cascader: return mode !== 'pc' ? 'van-field' : 'el-cascader';
+        case this.SysCustomWidgetType.Date: return mode !== 'pc' ? 'van-field' : 'el-date-picker';
         case this.SysCustomWidgetType.DateRange: return 'el-date-picker';
-        case this.SysCustomWidgetType.Upload: return 'online-custom-upload';
+        case this.SysCustomWidgetType.Upload: return mode !== 'pc' ? 'van-field' : 'online-custom-upload';
         case this.SysCustomWidgetType.RichEditor: return 'rich-editor';
         case this.SysCustomWidgetType.Link: return 'el-link';
-        case this.SysCustomWidgetType.UserSelect: return 'user-select';
-        case this.SysCustomWidgetType.DeptSelect: return 'dept-select';
-        case this.SysCustomWidgetType.DataSelect: return 'online-custom-dataselect';
+        case this.SysCustomWidgetType.UserSelect: return mode !== 'pc' ? 'van-field' : 'user-select';
+        case this.SysCustomWidgetType.DeptSelect: return mode !== 'pc' ? 'van-field' : 'dept-select';
+        case this.SysCustomWidgetType.DataSelect: return mode !== 'pc' ? 'van-field' : 'online-custom-dataselect';
         case this.SysCustomWidgetType.Tree: return 'online-custom-tree';
         case this.SysCustomWidgetType.AddressLocator: return 'address-locator';
         case this.SysCustomWidgetType.CitySelect: return 'city-select';
         case this.SysCustomWidgetType.PhoneNumber: return 'phone-number';
         case this.SysCustomWidgetType.EmailNumber: return 'email-number';
+        case this.SysCustomWidgetType.Rate: return 'van-field';
+        case this.SysCustomWidgetType.Stepper: return 'van-field';
+        case this.SysCustomWidgetType.Calendar: return 'van-field';
         case this.SysCustomWidgetType.LineChart:
         case this.SysCustomWidgetType.PieChart:
         case this.SysCustomWidgetType.BarChart:
@@ -323,13 +395,39 @@ export default {
           return 'online-custom-text';
         case this.SysCustomWidgetType.Image:
           return 'online-custom-image';
+        case this.SysCustomWidgetType.MobileRadioFilter:
+        case this.SysCustomWidgetType.MobileCheckBoxFilter:
+          return 'online-mobile-select-filter';
+        case this.SysCustomWidgetType.MobileInputFilter:
+          return 'online-mobile-input-filter';
+        case this.SysCustomWidgetType.MobileSwitchFilter:
+          return 'online-mobile-switch-filter';
+        case this.SysCustomWidgetType.MobileDateRangeFilter:
+          return 'online-mobile-date-range-filter';
+        case this.SysCustomWidgetType.MobileNumberRangeFilter:
+          return 'online-mobile-number-range-filter';
         default: return 'div';
       }
+    },
+    showRightIcon () {
+      return [
+        this.SysCustomWidgetType.Select,
+        this.SysCustomWidgetType.Cascader,
+        this.SysCustomWidgetType.Date,
+        this.SysCustomWidgetType.UserSelect,
+        this.SysCustomWidgetType.DeptSelect,
+        this.SysCustomWidgetType.Calendar
+      ].indexOf(this.widget.widgetType) !== -1;
     },
     getWidgetStyle () {
       return {
         width: this.widget.widgetType !== this.SysCustomWidgetType.Link ? '100%' : undefined
       }
+    },
+    isUploadImage () {
+      if (this.widget.widgetType !== this.SysCustomWidgetType.Upload) return false;
+      let column = this.widget.bindData.column || this.widget.column;
+      return column ? (column.fieldKind === this.SysOnlineFieldKind.UPLOAD_IMAGE) : false;
     }
   },
   mounted () {
@@ -345,9 +443,42 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    // 如果父组件为数据表格或者列表组件，那么子组件绑定表必须跟父组件一致
+    'parentWidget': {
+      handler (newValue, oldValue) {
+        if (this.parentWidget != null && this.widget) {
+          // 如果绑定的数据表改变了，修改子组件绑定的数据表
+          if (this.parentWidget.bindData.tableId !== this.widget.bindData.tableId) {
+            this.widget.bindData = {
+              ...this.parentWidget.bindData
+            };
+            this.widget.showName = undefined;
+            if (this.widget.widgetType === this.SysCustomWidgetType.Text) {
+              this.widget.props.text = '文本内容';
+            }
+          }
+        } else {
+          if (newValue == null && oldValue != null) {
+            this.widget.bindData = {
+              dataType: 0,
+              tableId: undefined,
+              table: undefined,
+              columnId: undefined,
+              column: undefined
+            }
+          }
+        }
+      },
+      immediate: true,
+      deep: true
     }
   }
 }
 </script>
 
-<style></style>
+<style scoped>
+  .van-vertical-item + .van-vertical-item {
+    margin-top: 8px;
+  }
+</style>

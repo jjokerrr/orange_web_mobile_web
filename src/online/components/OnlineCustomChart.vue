@@ -537,6 +537,7 @@ export default {
       }).filter(item => item != null);
     },
     getColumnPath (columnId, bindColumnId) {
+      if (this.widget == null || this.widget.dataset == null || !Array.isArray(this.widget.dataset.columnList)) return [];
       let columnTree = treeDataTranslate(this.widget.dataset.columnList.map(column => {
         return {
           ...column,
@@ -555,7 +556,7 @@ export default {
       return columnPath;
     },
     getColumnName (columnId, calculateType) {
-      if (!Array.isArray(this.widget.dataset.columnList)) return null;
+      if (this.widget == null || this.widget.dataset == null || !Array.isArray(this.widget.dataset.columnList)) return null;
       let isApi = this.widget.dataset.datasetType === this.DatasetType.API;
       if (isApi) {
         let columnPath = this.getColumnPath(columnId, this.widget.props.datasetInfo.bindColumnId);
@@ -750,6 +751,7 @@ export default {
   watch: {
     'widget.dataset': {
       handler () {
+        this.widget.widgetImpl = this;
         this.valueColumnList = this.getChartValueColumnList();
         this.categrayColumnList = this.getChartCategrayColumnList();
         this.rowGroupColumnList = this.getRowGroupColumnList();
@@ -781,6 +783,9 @@ export default {
       deep: true,
       immediate: true
     }
+  },
+  mounted () {
+    this.widget.widgetImpl = this;
   },
   destoryed () {
     if (this.refreshTimer != null) clearTimeout(this.refreshTimer);

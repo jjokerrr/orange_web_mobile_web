@@ -1,11 +1,16 @@
 <template>
   <div>
-    <table-box :data="formSysMenu.SysMenu.impl.dataList" :size="defaultFormItemSize" :tree-config="{rowField: 'menuId', parentField: 'parentId'}" @refresh="refreshFormSysMenu" class="border-bottom-0">
-    <el-button slot="operator" type="primary" icon="el-icon-plus" :size="defaultFormItemSize" :disabled="!checkPermCodeExist('formSysMenu:fragmentSysMenu:add')"
-      @click="onCreateSysMenuClick()">
-      新建
-    </el-button>
-    <vxe-column title="菜单名称" field="menuName" width="300px" tree-node>
+    <table-box class="border-bottom-0"
+      :data="formSysMenu.SysMenu.impl.dataList"
+      :size="defaultFormItemSize"
+      :tree-config="{rowField: 'menuId', parentField: 'parentId'}"
+      @refresh="refreshFormSysMenu"
+    >
+      <el-button slot="operator" type="primary" icon="el-icon-plus" :size="defaultFormItemSize" :disabled="!checkPermCodeExist('formSysMenu:fragmentSysMenu:add')"
+        @click="onCreateSysMenuClick()">
+        新建
+      </el-button>
+      <vxe-column title="菜单名称" field="menuName" width="300px" tree-node>
       </vxe-column>
       <vxe-column title="菜单图标" field="icon" width="100px">
         <template slot-scope="scope">

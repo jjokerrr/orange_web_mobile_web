@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     dataFormSubmit () {
-      debugger
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.$refs.verify.show();

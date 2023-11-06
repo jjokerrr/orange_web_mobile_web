@@ -3,6 +3,8 @@ import { SysOnlinePageType } from '@/staticDict/onlineStaticDict.js';
 import OnlineWidgetConfig from '../OnlinePageRender/components/config/index.js';
 import tableConfig from '@/online/config/table.js';
 import treeConfig from '@/online/config/tree.js';
+import queryListConfig from '@/online/config/queryList.js';
+import workOrderListConfig from '@/online/config/workOrderList.js';
 
 const baseQueryForm = {
   filterItemWidth: 350,
@@ -99,6 +101,93 @@ const baseQueryForm = {
   width: 800
 }
 
+const baseMobileQueryForm = {
+  filterItemWidth: 350,
+  gutter: 20,
+  labelWidth: 100,
+  labelPosition: 'right',
+  tableWidget: {
+    ...OnlineWidgetConfig.getWidgetObject(queryListConfig)
+  },
+  leftWidget: {
+    ...OnlineWidgetConfig.getWidgetObject(treeConfig)
+  },
+  operationList: [
+    {
+      id: 1,
+      type: SysCustomWidgetOperationType.BATCH_DELETE,
+      name: SysCustomWidgetOperationType.getValue(SysCustomWidgetOperationType.BATCH_DELETE),
+      enabled: false,
+      builtin: true,
+      rowOperation: false,
+      btnType: 'danger',
+      plain: true,
+      formId: undefined,
+      eventList: [],
+      readOnly: false,
+      showOrder: 1
+    },
+    {
+      id: 2,
+      type: SysCustomWidgetOperationType.ADD,
+      name: SysCustomWidgetOperationType.getValue(SysCustomWidgetOperationType.ADD),
+      enabled: false,
+      builtin: true,
+      rowOperation: false,
+      btnType: 'primary',
+      plain: false,
+      formId: undefined,
+      eventList: [],
+      readOnly: false,
+      showOrder: 2
+    },
+    {
+      id: 3,
+      type: SysCustomWidgetOperationType.EDIT,
+      name: SysCustomWidgetOperationType.getValue(SysCustomWidgetOperationType.EDIT),
+      enabled: false,
+      builtin: true,
+      rowOperation: true,
+      btnClass: 'table-btn success',
+      formId: undefined,
+      eventList: [],
+      readOnly: false,
+      showOrder: 10
+    }
+  ],
+  customFieldList: [],
+  widgetList: [],
+  formEventList: [],
+  maskFieldList: [],
+  allowEventList: [
+    OnlineFormEventType.AFTER_CREATE_FORM
+  ],
+  fullscreen: true,
+  advanceQuery: false,
+  supportOperation: true
+}
+
+const baseMobileWorkOrderForm = {
+  filterItemWidth: 350,
+  gutter: 20,
+  labelWidth: 100,
+  labelPosition: 'right',
+  tableWidget: {
+    ...OnlineWidgetConfig.getWidgetObject(workOrderListConfig)
+  },
+  operationList: [],
+  customFieldList: [],
+  widgetList: [],
+  formEventList: [],
+  maskFieldList: [],
+  allowEventList: [
+    OnlineFormEventType.AFTER_CREATE_FORM
+  ],
+  fullscreen: true,
+  advanceQuery: false,
+  supportOperation: false
+}
+
 const baseEditForm = {
   gutter: 20,
   labelWidth: 100,
@@ -166,6 +255,11 @@ function getFormConfig (formType, pageType) {
           ...baseQueryForm,
           advanceQuery: formType === SysOnlineFormType.ADVANCE_QUERY,
           supportOperation: formType !== SysOnlineFormType.ONE_TO_ONE_QUERY
+        },
+        mobile: {
+          ...baseMobileQueryForm,
+          advanceQuery: formType === SysOnlineFormType.ADVANCE_QUERY,
+          supportOperation: formType !== SysOnlineFormType.ONE_TO_ONE_QUERY
         }
       }));
     case SysOnlineFormType.FORM:
@@ -173,15 +267,25 @@ function getFormConfig (formType, pageType) {
         pc: {
           ...baseEditForm,
           supportOperation: pageType === SysOnlinePageType.BIZ
+        },
+        mobile: {
+          ...baseEditForm,
+          supportOperation: pageType === SysOnlinePageType.BIZ
         }
       }));
     case SysOnlineFormType.FLOW:
       return JSON.parse(JSON.stringify({
-        pc: baseFlowForm
+        pc: baseFlowForm,
+        mobile: {
+          ...baseFlowForm
+        }
       }));
     case SysOnlineFormType.WORK_ORDER:
       return JSON.parse(JSON.stringify({
-        pc: baseWorkflowForm
+        pc: baseWorkflowForm,
+        mobile: {
+          ...baseMobileWorkOrderForm
+        }
       }));
     default: return null;
   }

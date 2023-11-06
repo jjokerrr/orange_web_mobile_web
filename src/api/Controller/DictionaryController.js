@@ -64,6 +64,40 @@ export default class DictionaryController {
       });
     });
   }
+  static dictAreaCode (sender, params, axiosOption, httpOption) {
+    return new Promise((resolve, reject) => {
+      sender.doUrl('/admin/app/areaCode/listDict', 'get', params, axiosOption, httpOption).then(res => {
+        let dictData = new staticDict.DictionaryBase('地址');
+        dictData.setList(res.data);
+        resolve(dictData);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
+  static dictAreaCodeByParentId (sender, params, axiosOption, httpOption) {
+    return new Promise((resolve, reject) => {
+      sender.doUrl('/admin/app/areaCode/listDictByParentId', 'get', params, axiosOption, httpOption).then(res => {
+        let dictData = new staticDict.DictionaryBase('地址');
+        dictData.setList(res.data);
+        resolve(dictData);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
+  static dictAddAreaCode (sender, params, axiosOption, httpOption) {
+    return sender.doUrl('', 'post', params, axiosOption, httpOption);
+  }
+  static dictDeleteAreaCode (sender, params, axiosOption, httpOption) {
+    return sender.doUrl('', 'post', params, axiosOption, httpOption);
+  }
+  static dictUpdateAreaCode (sender, params, axiosOption, httpOption) {
+    return sender.doUrl('', 'post', params, axiosOption, httpOption);
+  }
+  static dictReloadAreaCodeCachedData (sender, params, axiosOption, httpOption) {
+    return sender.doUrl('', 'get', params, axiosOption, httpOption);
+  }
   static dictSysMenu (sender, params, axiosOption, httpOption) {
     return new Promise((resolve, reject) => {
       sender.doUrl('admin/upms/sysMenu/listMenuDict', 'get', params, axiosOption, httpOption).then(res => {

@@ -22,8 +22,8 @@
         :width="tableColumn.columnWidth"
       >
         <template #default="{ row }">
-          <el-tag :size="defaultFormItemSize" :type="row[tableColumn.showFieldName] ? 'success' : 'danger'">
-            {{row[tableColumn.showFieldName] ? '是' : '否'}}
+          <el-tag :size="defaultFormItemSize" :type="getObjectValue(row, tableColumn.showFieldName) ? 'success' : 'danger'">
+            {{getObjectValue(row, tableColumn.showFieldName) ? '是' : '否'}}
           </el-tag>
         </template>
       </vxe-column>
@@ -111,7 +111,7 @@
 
 <script>
 import ajax from '@/core/http/index.js';
-import { findItemFromList } from '@/utils';
+import { findItemFromList, getObjectValue } from '@/utils';
 import { uploadMixin } from '@/core/mixins';
 
 export default {
@@ -228,8 +228,11 @@ export default {
 
       return downloadUrl;
     },
+    getObjectValue (row, fieldName) {
+      return getObjectValue(row, fieldName);
+    },
     parseTableUploadData (tableColumn, row) {
-      let jsonData = row[tableColumn.showFieldName];
+      let jsonData = this.getObjectValue(row, tableColumn.showFieldName);
       if (jsonData == null) return [];
       let downloadParams = {
         ...this.buildFlowParam,

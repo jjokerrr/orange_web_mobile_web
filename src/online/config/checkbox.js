@@ -23,6 +23,32 @@ const checkbox = {
       component: 'CustomWidgetDictSetting'
     }
   },
+  direction: {
+    name: '选项排列方式',
+    widgetType: SysCustomWidgetType.Radio,
+    value: 'vertical',
+    visible: function (formConfig) {
+      return formConfig && formConfig.activeMode === 'mobile';
+    },
+    dropdownList: [
+      {
+        id: 'horizontal',
+        name: '横向排列'
+      },
+      {
+        id: 'vertical',
+        name: '纵向排列'
+      }
+    ]
+  },
+  'icon-size': {
+    name: '图标大小',
+    visible: function (formConfig) {
+      return formConfig && formConfig.activeMode === 'mobile';
+    },
+    widgetType: SysCustomWidgetType.Input,
+    value: '20px'
+  },
   required: {
     name: '是否必填',
     value: false,

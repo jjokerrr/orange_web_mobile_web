@@ -77,6 +77,8 @@ import OnlineTabPanelSetting from './OnlineTabPanelSetting/index.vue';
 import CustomWidgetRelativeTableSetting from './CustomWidgetRelativeTableSetting/index.vue';
 import CustomTableContainerSetting from './CustomTableContainerSetting.vue';
 import OnlineImageUrlInput from '@/online/components/WidgetAttributeSetting/components/OnlineImageUrlInput.vue';
+import OnlineMobieNumberRangeQuickSelectSetting from '@/online/components/WidgetAttributeSetting/components/OnlineMobieNumberRangeQuickSelectSetting/index.vue';
+import OnlineCustomListOrderSetting from '@/online/components/WidgetAttributeSetting/components/OnlineCustomListOrderSetting/index.vue';
 
 export default {
   name: 'editCustomWidgetAttribute',
@@ -100,7 +102,9 @@ export default {
     OnlineTabPanelSetting,
     CustomWidgetRelativeTableSetting,
     CustomTableContainerSetting,
-    OnlineImageUrlInput
+    OnlineImageUrlInput,
+    OnlineMobieNumberRangeQuickSelectSetting,
+    OnlineCustomListOrderSetting
   },
   inject: ['formConfig'],
   data () {
@@ -123,7 +127,7 @@ export default {
         if (this.isWidgetDictSelect) {
           this.dropdownData = this.attributeItem.dropdownList(this.formConfig());
         } else {
-          this.dropdownData = this.attributeItem.dropdownList();
+          this.dropdownData = this.attributeItem.dropdownList(this.formConfig());
         }
       } else {
         this.dropdownData = Array.isArray(this.attributeItem.dropdownList) ? this.attributeItem.dropdownList : [];

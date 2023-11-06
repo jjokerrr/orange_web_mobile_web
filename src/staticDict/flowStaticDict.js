@@ -246,6 +246,30 @@ const SysFlowCopyForType = new DictionaryBase('抄送类型', [
 ]);
 Vue.prototype.SysFlowCopyForType = SysFlowCopyForType;
 
+const SysAutoCodeType = new DictionaryBase('自动编码类型', [
+  {
+    id: 'DAYS',
+    name: '精确到日',
+    symbol: 'DAYS'
+  },
+  {
+    id: 'HOURS',
+    name: '精确到时',
+    symbol: 'HOURS'
+  },
+  {
+    id: 'MINUTES',
+    name: '精确到分',
+    symbol: 'MINUTES'
+  },
+  {
+    id: 'SECONDS',
+    name: '精确到秒',
+    symbol: 'SECONDS'
+  }
+]);
+Vue.prototype.SysAutoCodeType = SysAutoCodeType;
+
 const FlowNodeType = new DictionaryBase('钉钉节点类型', [
   {
     id: 0,
@@ -302,6 +326,7 @@ export {
   SysFlowTaskType,
   SysFlowVariableType,
   SysFlowWorkOrderStatus,
+  SysAutoCodeType,
   SysFlowCopyForType,
   DiagramType,
   FlowNodeType

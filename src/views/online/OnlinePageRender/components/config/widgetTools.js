@@ -58,6 +58,7 @@ function columnIsValidByWidgetType (column, widgetType, formType) {
   } else {
     switch (widgetType) {
       case SysCustomWidgetType.Label:
+      case SysCustomWidgetType.MobileInputFilter:
         disabled = false;
         break;
       case SysCustomWidgetType.Text:
@@ -71,12 +72,15 @@ function columnIsValidByWidgetType (column, widgetType, formType) {
         break;
       case SysCustomWidgetType.NumberInput:
       case SysCustomWidgetType.NumberRange:
+      case SysCustomWidgetType.MobileNumberRangeFilter:
         disabled = columnFieldType !== 'Number';
         break;
       case SysCustomWidgetType.Switch:
+      case SysCustomWidgetType.MobileSwitchFilter:
         disabled = columnFieldType !== 'Boolean';
         break;
       case SysCustomWidgetType.Slider:
+      case SysCustomWidgetType.Stepper:
         disabled = columnFieldType !== 'Number';
         break;
       case SysCustomWidgetType.Radio:
@@ -84,11 +88,15 @@ function columnIsValidByWidgetType (column, widgetType, formType) {
       case SysCustomWidgetType.Cascader:
       case SysCustomWidgetType.CheckBox:
       case SysCustomWidgetType.Tree:
+      case SysCustomWidgetType.MobileRadioFilter:
+      case SysCustomWidgetType.MobileCheckBoxFilter:
         disabled = (columnFieldType !== 'String' && columnFieldType !== 'Number') || column.dictId == null;
         if (column.dictId == null) warningMsg = '未绑定字典';
         break;
       case SysCustomWidgetType.Date:
       case SysCustomWidgetType.DateRange:
+      case SysCustomWidgetType.Calendar:
+      case SysCustomWidgetType.MobileDateRangeFilter:
         disabled = columnFieldType !== 'Date';
         break;
       case SysCustomWidgetType.Upload:

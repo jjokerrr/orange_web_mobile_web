@@ -4,6 +4,7 @@
 
 <script>
 import chartMixins from './chartMixins.js';
+import {pieChartData as defaultData} from './defaultData'
 import * as echarts from 'echarts';
 import {
   getDefaultGrid,
@@ -86,7 +87,8 @@ export default {
         if (this.data.length === 0) {
           this.echarts.clear();
         }
-        this.echarts.setOption(buildChartOptions(this, this.pieOptions), true);
+        const options = buildChartOptions(this, this.pieOptions)
+        this.echarts.setOption(options, true);
         this.echarts.resize();
       }
     },
@@ -135,18 +137,19 @@ export default {
       return temp;
     },
     series () {
+      let arr = []
+      let center = ['50%', '50%'];
+      let radius = ['0%', '70%'];
       if (Array.isArray(this.valueColumnList) && Array.isArray(this.data)) {
-        return this.valueColumnList.map((valueItem) => {
+        arr = this.valueColumnList.map((valueItem) => {
           let serieData = this.categrayColumnData.map((name, index) => {
             return {
               value: this.getRowDataByColumnName(this.data[index], valueItem.columnName),
               name: name
             }
           });
-          let center = ['50%', '50%'];
           if (this.options.series.centerX != null && this.options.series.centerX !== '') center[0] = this.options.series.centerX + '%';
           if (this.options.series.centerY != null && this.options.series.centerY !== '') center[1] = this.options.series.centerY + '%';
-          let radius = ['0%', '70%'];
           if (this.options.series.radiusInner != null && this.options.series.radiusInner !== '') radius[0] = this.options.series.radiusInner;
           if (this.options.series.radiusOuter != null && this.options.series.radiusOuter !== '') radius[1] = this.options.series.radiusOuter;
           return {
@@ -160,7 +163,16 @@ export default {
           }
         });
       }
-      return [];
+
+      return arr.length > 0 ? arr : [{
+        ...defaultPieOptions,
+        ...this.options.series,
+        roseType: this.options.series.isRose ? 'area' : undefined,
+        center: center,
+        radius: radius,
+        label: this.options.basic.label,
+        data: defaultData
+      }]
     },
     pieOptions () {
       let options = {

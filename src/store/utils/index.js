@@ -36,6 +36,7 @@ function initUserInfo (userInfo) {
         userInfo.headImageUrl = null;
       }
     } catch (e) {
+      console.error('解析头像数据失败！', e);
       userInfo.headImageUrl = null;
     }
   } else {

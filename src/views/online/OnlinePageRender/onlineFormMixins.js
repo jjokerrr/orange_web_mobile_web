@@ -13,6 +13,12 @@ import {
 import ajax from '@/core/http/index.js';
 
 export const OnlineFormMixins = {
+  props: {
+    mode: {
+      type: String,
+      default: 'pc'
+    }
+  },
   mixins: [refreshDataMixins],
   data () {
     return {
@@ -243,6 +249,7 @@ export const OnlineFormMixins = {
         // 绑定从表字段
         if (widget.relation) {
           this.formData[widget.relation.variableName][widget.column.columnName] = value;
+          return;
         }
         // 绑定主表字段
         if (widget.datasource) {
@@ -314,6 +321,9 @@ export const OnlineFormMixins = {
             } else {
               this.formData[widget.relation.variableName][widget.column.columnName + 'DictMap'] = dictData;
             }
+            let fun = this.getScriptFunction(widget.eventInfo, this.OnlineFormEventType.CHANGE);
+            fun && fun(value, detail);
+            return;
           }
           // 绑定主表字段
           if (widget.datasource) {

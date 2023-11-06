@@ -4,6 +4,7 @@
 
 <script>
 import chartMixins from './chartMixins.js';
+import {radarChartData as defaultData} from './defaultData'
 import * as echarts from 'echarts';
 import {
   getDefaultLabel,
@@ -76,7 +77,8 @@ export default {
         if (this.data.length === 0) {
           this.echarts.clear();
         }
-        this.echarts.setOption(buildChartOptions(this, this.radarOptions), true);
+        const options = buildChartOptions(this, this.radarOptions)
+        this.echarts.setOption(options, true);
         this.echarts.resize();
       }
     },
@@ -97,7 +99,6 @@ export default {
       let clickData = this.data[params.dataIndex];
       this.$emit('dblclick', clickData);
     }
-    
   },
   computed: {
     categrayColumnData () {
@@ -154,7 +155,7 @@ export default {
           ...defaultRadarOptions,
           ...series,
           ...this.labelSetting,
-          data: lineData
+          data: lineData.length > 0 ? lineData : defaultData
         }]
       } else {
         let lineData = [];
@@ -174,7 +175,7 @@ export default {
           ...defaultRadarOptions,
           ...series,
           ...this.labelSetting,
-          data: lineData
+          data: lineData.length > 0 ? lineData : defaultData
         }]
       }
     },

@@ -87,6 +87,7 @@ import OnlineTableColumnSetting from '../components/OnlineTableColumnSetting/ind
 import CustomWidgetDictSetting from '../components/CustomWidgetDictSetting/index.vue';
 import OnlineTabPanelSetting from '../components/OnlineTabPanelSetting/index.vue';
 import OnlineImageUrlInput from '../components/OnlineImageUrlInput.vue';
+import OnlineMobieNumberRangeQuickSelectSetting from '@/online/components/WidgetAttributeSetting/components/OnlineMobieNumberRangeQuickSelectSetting/index.vue';
 
 export default {
   name: 'editCustomWidgetAttribute',
@@ -103,7 +104,8 @@ export default {
     OnlineTableColumnSetting,
     CustomWidgetDictSetting,
     OnlineTabPanelSetting,
-    OnlineImageUrlInput
+    OnlineImageUrlInput,
+    OnlineMobieNumberRangeQuickSelectSetting
   },
   inject: ['formConfig'],
   data () {

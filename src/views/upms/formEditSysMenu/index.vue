@@ -75,8 +75,13 @@
             <span>权限字列表</span>
             <el-input :size="defaultFormItemSize" v-model="permCodeNameFilter" placeholder="权限字名称查询" style="width: 284px;" clearable prefix-icon="el-icon-search" />
           </div>
-          <vxe-table ref="table" :data="permCodeListFilter" :size="defaultFormItemSize" height="240px" header-cell-class-name="table-header-gray"
-            :tree-config="{transform: true, rowField: 'permCodeId', parentField: 'parentId'}" :checkbox-config="{checkStrictly: true}"
+          <vxe-table ref="table" v-if="permCodeReady"
+            :data="permCodeListFilter"
+            :size="defaultFormItemSize"
+            :row-config="{keyField: 'permCodeId'}"
+            height="240px" header-cell-class-name="table-header-gray"
+            :tree-config="{transform: true, rowField: 'permCodeId', parentField: 'parentId'}"
+            :checkbox-config="{checkStrictly: true, checkRowKeys: formData.permCodeIdList}"
           >
             <vxe-column type="checkbox" :width="40" />
             <vxe-column title="权限字名称" field="showName" tree-node/>
@@ -85,7 +90,7 @@
                 <el-tag :size="defaultFormItemSize" :type="getPermCodeType(scope.row.permCodeType)">{{SysPermCodeType.getValue(scope.row.permCodeType)}}</el-tag>
               </template>
             </vxe-column>
-            <vxe-column title="菜单路由" field="permCode" />
+            <vxe-column title="权限字标识" field="permCode" />
             <template slot="empty">
               <div class="table-empty unified-font">
                 <img src="@/assets/img/empty.png">
@@ -139,6 +144,7 @@ export default {
   },
   data () {
     return {
+      permCodeReady: false,
       // 是否自动用上级菜单的名称过滤权限字列表，当这个开关打开后，会使用getAutoFilterString返回的字符串当做过滤字符串
       autoFilter: false,
       permCodeNameFilter: undefined,
@@ -169,7 +175,6 @@ export default {
       parentMenuPath: [],
       menuTree: [],
       permCodeList: [],
-      defaultExpandedKeys: [],
       rules: {
         menuName: [{required: true, message: '请输入菜单名称', trigger: 'blur'}],
         showOrder: [{required: true, message: '请输入菜单显示顺序', trigger: 'blur'}],
@@ -352,31 +357,18 @@ export default {
       }).catch(e => {});
     },
     initData () {
-      this.defaultExpandedKeys = [];
       this.formatMenuTree();
       this.parentMenuPath = findTreeNodePath(this.menuTree, this.formData.parentId, 'menuId');
       this.onParentMenuChange(this.parentMenuPath, true);
       this.onMenuTypeChange(this.formData.menuType);
+      this.permCodeReady = false;
       SystemController.getPermCodeList(this, {}).then(res => {
         this.permCodeList = res.data;
-        if (Array.isArray(this.formData.permCodeIdList) && this.formData.permCodeIdList.length > 0) {
-          let tempList = [];
-          let rowList = [];
-          this.permCodeList.forEach((item) => {
-            if (findItemFromList(this.formData.permCodeIdList, item.permCodeId) != null) {
-              tempList.push(item.permCodeId);
-              rowList.push(item)
-            }
-          });
-          this.$refs.table.setCheckboxRow(rowList, true)
-          this.defaultExpandedKeys = tempList;
-          this.$refs.permCodeTree.setCheckedKeys(tempList);
-          this.$nextTick(() => {
-            this.allowParentList = [];
-            if (this.permCodeNameFilter != null && this.permCodeNameFilter !== '') this.$refs.permCodeTree.filter(this.permCodeNameFilter);
-          });
-        }
-      }).catch(e => {});
+        this.permCodeReady = true;
+      }).catch(e => {
+        this.permCodeReady = true;
+        console.log(e);
+      });
       this.loadPageAndForms();
       this.loadFlowEntryForms();
     },

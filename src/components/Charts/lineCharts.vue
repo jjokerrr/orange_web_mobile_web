@@ -4,6 +4,7 @@
 
 <script>
 import chartMixins from './chartMixins.js';
+import {lineChartData as defaultData} from './defaultData'
 import * as echarts from 'echarts';
 import {
   getDefaultGrid,
@@ -96,7 +97,9 @@ export default {
         if (this.data.length === 0) {
           this.echarts.clear();
         }
-        this.echarts.setOption(buildChartOptions(this, this.lineOptions), true);
+        const options = buildChartOptions(this, this.lineOptions)
+        console.log(options, '2332')
+        this.echarts.setOption(options, true);
         this.echarts.resize();
       }
     },
@@ -152,8 +155,9 @@ export default {
       return [];
     },
     series () {
+      let arr = []
       if (Array.isArray(this.valueColumnList) && Array.isArray(this.data)) {
-        return this.valueColumnList.map((valueItem, index) => {
+        arr = this.valueColumnList.map((valueItem, index) => {
           let lineData = this.data.map(dataItem => {
             return this.getRowDataByColumnName(dataItem, valueItem.columnName);
           });
@@ -167,7 +171,14 @@ export default {
           }
         });
       }
-      return [];
+      return arr.length > 0 ? arr : [{
+        name: 'test',
+        ...defaultLineOptions,
+        ...this.options.series,
+        data: defaultData,
+        stack: this.options.series.stack ? 'D' : undefined,
+        areaStyle: this.options.series.areaStyle ? {} : undefined
+      }];
     },
     lineOptions () {
       let options = {

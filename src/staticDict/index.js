@@ -274,6 +274,25 @@ const SysMenuType = new DictionaryBase('菜单类型', [
 ]);
 Vue.prototype.SysMenuType = SysMenuType;
 
+const MobileEntryType = new DictionaryBase('移动端首页配置项类型', [
+  {
+    id: 0,
+    name: '轮播图',
+    symbol: 'BANNER'
+  },
+  {
+    id: 1,
+    name: '九宫格',
+    symbol: 'SUDOKU'
+  },
+  {
+    id: 2,
+    name: '分组',
+    symbol: 'GROUP'
+  }
+]);
+Vue.prototype.MobileEntryType = MobileEntryType;
+
 const SysMenuBindType = new DictionaryBase('菜单绑定类型', [
   {
     id: 0,
@@ -368,6 +387,21 @@ const SysCustomWidgetType = new DictionaryBase('组件类型', [
     symbol: 'Tree'
   },
   {
+    id: 14,
+    name: '评分组件',
+    symbol: 'Rate'
+  },
+  {
+    id: 15,
+    name: '进步器',
+    symbol: 'Stepper'
+  },
+  {
+    id: 16,
+    name: '日历组件',
+    symbol: 'Calendar'
+  },
+  {
     id: 20,
     name: '日期选择框',
     symbol: 'Date'
@@ -426,6 +460,16 @@ const SysCustomWidgetType = new DictionaryBase('组件类型', [
     id: 102,
     name: '数据列表',
     symbol: 'List'
+  },
+  {
+    id: 103,
+    name: '查询列表',
+    symbol: 'QueryList'
+  },
+  {
+    id: 104,
+    name: '工单列表',
+    symbol: 'WorkOrderList'
   },
   {
     id: 200,
@@ -543,6 +587,11 @@ const SysCustomWidgetType = new DictionaryBase('组件类型', [
     symbol: 'AddressLocator'
   },
   {
+    id: 304,
+    name: '分组容器',
+    symbol: 'CellGroup'
+  },
+  {
     id: 400,
     name: '用户选择',
     symbol: 'UserSelect'
@@ -561,6 +610,36 @@ const SysCustomWidgetType = new DictionaryBase('组件类型', [
     id: 403,
     name: '表格容器',
     symbol: 'TableContainer'
+  },
+  {
+    id: 500,
+    name: '单选过滤',
+    symbol: 'MobileRadioFilter'
+  },
+  {
+    id: 501,
+    name: '多选过滤',
+    symbol: 'MobileCheckBoxFilter'
+  },
+  {
+    id: 502,
+    name: '文本过滤',
+    symbol: 'MobileInputFilter'
+  },
+  {
+    id: 503,
+    name: '开关过滤',
+    symbol: 'MobileSwitchFilter'
+  },
+  {
+    id: 504,
+    name: '日期过滤',
+    symbol: 'MobileDateRangeFilter'
+  },
+  {
+    id: 505,
+    name: '数字范围过滤',
+    symbol: 'MobileNumberRangeFilter'
   }
 ]);
 Vue.prototype.SysCustomWidgetType = SysCustomWidgetType;
@@ -900,6 +979,7 @@ export {
   SysPermModuleType,
   SysPermCodeType,
   SysMenuBindType,
+  MobileEntryType,
   SysMenuType,
   ScatterSymbolType,
   SysCustomWidgetType,

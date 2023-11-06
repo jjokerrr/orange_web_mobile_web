@@ -168,9 +168,8 @@
     <div class="design-panel">
       <el-row type="flex" justify="space-between" align="middle" style="height: 48px">
         <div style="font-size: 18px;">
-          <i class="device-item online-icon icon-phone" title="手机端" />
-          <i class="device-item online-icon icon-pad" title="PAD" />
-          <i class="device-item online-icon icon-pc active" title="PC 端" />
+          <i class="device-item online-icon icon-phone" :class="{active: activeMode === 'mobile', disabled: ((currentForm || {}).formType === SysOnlineFormType.ADVANCE_QUERY)}" title="手机端" @click="onActiveModeChange('mobile')" />
+          <i class="device-item online-icon icon-pc" :class="{active: activeMode === 'pc'}" title="PC 端" @click="onActiveModeChange('pc')" />
         </div>
         <el-button type="text" size="small" icon="el-icon-refresh"
           style="font-size: 12px; color: #999999;font-weight: normal;"
@@ -179,51 +178,74 @@
       </el-row>
       <div class="design-box" :key="currentFormId">
         <div style="max-width: 100%;"
-          :style="{
-            width: (currentForm == null || currentForm[activeMode].fullscreen) ? '100%' : (currentForm[activeMode].width + 'px'),
-            background: [SysOnlineFormType.ADVANCE_QUERY, SysOnlineFormType.QUERY, SysOnlineFormType.ONE_TO_ONE_QUERY, SysOnlineFormType.WORK_ORDER].indexOf((currentForm || {}).formType) !== -1 ? undefined : 'white',
-            padding: [SysOnlineFormType.ADVANCE_QUERY, SysOnlineFormType.QUERY, SysOnlineFormType.ONE_TO_ONE_QUERY, SysOnlineFormType.WORK_ORDER].indexOf((currentForm || {}).formType) !== -1 ? '0px' : '25px'
-          }"
+          :style="getDesignBoxStyle"
           @click="onFormClick"
         >
-          <OnlineQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.QUERY"
-            height="100%" :isEdit="true"
+          <!-- 基础查询页面 -->
+          <OnlineQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.QUERY && activeMode === 'pc'"
+            height="100%" :isEdit="true" :mode="activeMode"
             :formConfig="currentForm[activeMode]"
             :currentWidget="currentWidget"
             @tableClick="onWidgetClick"
             @widgetClick="onWidgetClick"
           />
+          <OnlineMobileQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.QUERY && activeMode === 'mobile'"
+            height="100%" :isEdit="true" :mode="activeMode"
+            :formConfig="currentForm[activeMode]"
+            :currentWidget="currentWidget"
+            @tableClick="onWidgetClick"
+            @widgetClick="onWidgetClick"
+          />
+          <!-- 左树右表页面 -->
           <OnlineAdvanceQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.ADVANCE_QUERY"
-            height="100%" :isEdit="true"
+            height="100%" :isEdit="true" :mode="activeMode"
             :formConfig="currentForm[activeMode]"
             :currentWidget="currentWidget"
             @tableClick="onWidgetClick"
             @widgetClick="onWidgetClick"
           />
-          <OnlineOneToOneQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.ONE_TO_ONE_QUERY"
-            height="100%" :isEdit="true"
+          <!-- 一对一查询页面 -->
+          <OnlineOneToOneQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.ONE_TO_ONE_QUERY && activeMode === 'pc'"
+            height="100%" :isEdit="true" :mode="activeMode"
             :formConfig="currentForm[activeMode]"
             :currentWidget="currentWidget"
             @tableClick="onWidgetClick"
             @widgetClick="onWidgetClick"
           />
+          <OnlineMobileQueryForm v-if="(currentForm || {}).formType === SysOnlineFormType.ONE_TO_ONE_QUERY && activeMode === 'mobile'"
+            height="100%" :isEdit="true" :mode="activeMode"
+            :formConfig="currentForm[activeMode]"
+            :currentWidget="currentWidget"
+            @tableClick="onWidgetClick"
+            @widgetClick="onWidgetClick"
+          />
+          <!-- 编辑表单 -->
           <OnlineEditForm v-if="(currentForm || {}).formType === SysOnlineFormType.FORM"
-            :height="(getClientHeight - 235) + 'px'" :isEdit="true"
+            :height="(getClientHeight - 235) + 'px'" :isEdit="true" :mode="activeMode"
             :formConfig="currentForm[activeMode]"
             :currentWidget="currentWidget"
             @widgetClick="onWidgetClick"
           />
+          <!-- 流程表单 -->
           <OnlineWorkFlowForm v-if="(currentForm || {}).formType === SysOnlineFormType.FLOW"
-            :height="(getClientHeight - 235) + 'px'" :isEdit="true"
+            :height="(getClientHeight - 235) + 'px'" :isEdit="true" :mode="activeMode"
             :formConfig="currentForm[activeMode]"
             :currentWidget="currentWidget"
             @widgetClick="onWidgetClick"
           />
-          <OnlineWorkOrderForm v-if="(currentForm || {}).formType === SysOnlineFormType.WORK_ORDER"
-            height="100%" :isEdit="true"
+          <!-- 工单列表页面 -->
+          <OnlineWorkOrderForm v-if="(currentForm || {}).formType === SysOnlineFormType.WORK_ORDER && activeMode === 'pc'"
+            height="100%" :isEdit="true" :mode="activeMode"
             :formConfig="currentForm[activeMode]"
             :currentWidget="currentWidget"
             @tableClick="onWidgetClick"
+          />
+          <OnlineMobileWorkOrderForm v-if="(currentForm || {}).formType === SysOnlineFormType.WORK_ORDER && activeMode === 'mobile'"
+            height="100%" :isEdit="true" :mode="activeMode"
+            :formConfig="currentForm[activeMode]"
+            :currentWidget="currentWidget"
+            @tableClick="onWidgetClick"
+            @widgetClick="onWidgetClick"
           />
         </div>
       </div>
@@ -306,6 +328,8 @@ import CustomFormOperateSetting from './components/CustomFormOperateSetting.vue'
 import CustomEventSetting from '@/online/components/CustomEventSetting/index.vue';
 import widgetData from '../OnlinePageRender/components/config/index.js';
 import OnlineQueryForm from '../OnlinePageRender/OnlineQueryForm/index.vue';
+import OnlineMobileQueryForm from '../OnlinePageRender/OnlineMobileQueryForm/index.vue';
+import OnlineMobileWorkOrderForm from '../OnlinePageRender/OnlineMobileWorkOrderForm/index.vue';
 import OnlineOneToOneQueryForm from '../OnlinePageRender/OnlineOneToOneForm/index.vue';
 import OnlineAdvanceQueryForm from '../OnlinePageRender/OnlineAdvanceQueryForm/index.vue';
 import OnlineWorkOrderForm from '../OnlinePageRender/OnlineWorkOrderForm/index.vue';
@@ -330,8 +354,8 @@ export default {
     },
     // 表单可用组件
     widgetGroup: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     // 表单组件树
     formWidgetList: {
@@ -360,6 +384,9 @@ export default {
     OnlineOneToOneQueryForm,
     OnlineWorkFlowForm,
     OnlineWorkOrderForm,
+    // 移动端表单
+    OnlineMobileQueryForm,
+    OnlineMobileWorkOrderForm,
     OnlineEditForm
   },
   provide () {
@@ -385,9 +412,15 @@ export default {
     }
   },
   methods: {
+    onActiveModeChange (mode) {
+      if (mode !== 'pc' && (this.currentForm || {}).formType === this.SysOnlineFormType.ADVANCE_QUERY) {
+        // 移动端不支持左树右表类型页面
+        return;
+      }
+      this.activeMode = mode;
+      this.refreshFormInfo();
+    },
     saveForm () {
-      debugger
-      console.log(this.currentForm)
       this.$emit('updateForm', this.currentForm);
     },
     onCreateNewForm () {
@@ -419,6 +452,9 @@ export default {
     },
     cloneWidget (widget) {
       let temp = widgetData.getWidgetObject(widget);
+      if (this.activeMode === 'mobile') {
+        temp.props.span = 24;
+      }
       this.$set(temp, 'relation', undefined);
       this.$set(temp, 'datasource', undefined);
       this.$set(temp, 'column', undefined);
@@ -434,7 +470,6 @@ export default {
       }
     },
     getRelationType (relationType) {
-      // debugger
       switch (relationType) {
         case this.SysOnlineRelationType.ONE_TO_ONE: return 'primary';
         case this.SysOnlineRelationType.ONE_TO_MANY: return 'warning';
@@ -581,6 +616,7 @@ export default {
     refreshFormInfo () {
       this.currentWidget = undefined;
       if (this.currentForm != null) {
+        if (this.currentForm.formType === this.SysOnlineFormType.ADVANCE_QUERY) this.activeMode = 'pc';
         if (Array.isArray(this.currentForm[this.activeMode].widgetList)) {
           if (this.currentForm[this.activeMode].tableWidget) {
             this.formatWidget(this.currentForm[this.activeMode].tableWidget);
@@ -738,29 +774,22 @@ export default {
       return [];
     },
     formValidWidgetGroup () {
-      let tempList = this.widgetGroup.filter(group => {
+      let tempGroupList = JSON.parse(JSON.stringify(this.widgetGroup[this.activeMode] || []));
+      let tempList = (tempGroupList || []).filter(group => {
         if (this.currentForm == null) return true;
         if (this.currentForm.formType === this.SysOnlineFormType.QUERY || this.currentForm.formType === this.SysOnlineFormType.ADVANCE_QUERY) {
-          return group.id !== 'layout';
+          if (group.id === 'base') {
+            // 查询页面过滤掉列表组件
+            group.widgetList = group.widgetList.filter(widget => {
+              return widget.widgetType !== this.SysCustomWidgetType.List;
+            })
+          }
+          return group.id === 'filter' || this.activeMode === 'mobile';
         } else {
-          return true;
+          return group.id !== 'filter';
         }
       });
-      let queryValidWidgetList = [
-        this.SysCustomWidgetType.Input,
-        this.SysCustomWidgetType.NumberInput,
-        this.SysCustomWidgetType.NumberRange,
-        this.SysCustomWidgetType.Switch,
-        this.SysCustomWidgetType.Radio,
-        this.SysCustomWidgetType.CheckBox,
-        this.SysCustomWidgetType.Select,
-        this.SysCustomWidgetType.Cascader,
-        this.SysCustomWidgetType.Date,
-        this.SysCustomWidgetType.DateRange,
-        this.SysCustomWidgetType.UserSelect,
-        this.SysCustomWidgetType.DeptSelect,
-        this.SysCustomWidgetType.DataSelect
-      ];
+
       return tempList.map(item => {
         return {
           ...item,
@@ -771,12 +800,7 @@ export default {
             if (this.filter.widgetName != null && this.filter.widgetName !== '') {
               isMatch = this.SysCustomWidgetType.getValue(widget.widgetType).indexOf(this.filter.widgetName) !== -1;
             }
-            if (!isMatch) return false;
-            if (this.currentForm.formType === this.SysOnlineFormType.QUERY || this.currentForm.formType === this.SysOnlineFormType.ADVANCE_QUERY) {
-              return queryValidWidgetList.indexOf(widget.widgetType) !== -1;
-            } else {
-              return true;
-            }
+            return isMatch;
           })
         }
       });
@@ -812,6 +836,25 @@ export default {
         }
       }
       return null;
+    },
+    getDesignBoxStyle () {
+      let width, padding, background;
+      let formInfo = (this.currentForm || {})[this.activeMode] || {};
+      if (this.activeMode === 'pc') {
+        width = (this.currentForm == null || formInfo.fullscreen) ? '100%' : ((formInfo.width || 600) + 'px');
+        padding = [this.SysOnlineFormType.ADVANCE_QUERY, this.SysOnlineFormType.QUERY, this.SysOnlineFormType.ONE_TO_ONE_QUERY, this.SysOnlineFormType.WORK_ORDER].indexOf((this.currentForm || {}).formType) !== -1 ? '0px' : '25px';
+        background = [this.SysOnlineFormType.ADVANCE_QUERY, this.SysOnlineFormType.QUERY, this.SysOnlineFormType.ONE_TO_ONE_QUERY, this.SysOnlineFormType.WORK_ORDER].indexOf((this.currentForm || {}).formType) !== -1 ? undefined : 'white';
+      } else {
+        width = '375px';
+        padding = '0px';
+        background = undefined;
+      }
+      return {
+        width,
+        padding,
+        background,
+        border: this.activeMode === 'pc' ? undefined : '1px solid #E8E8E8'
+      }
     },
     ...mapGetters(['getClientHeight'])
   },
@@ -1073,12 +1116,15 @@ export default {
     color: #666666;
     text-align: center;
     font-size: 24px;
-    cursor: not-allowed;
+    cursor: pointer;
   }
   .device-item.active {
     cursor: pointer;
     background: #FFF1E5;
     color: $--color-primary;
+  }
+  .device-item.disabled {
+    cursor: not-allowed!important;
   }
   .active{
     .img-box{

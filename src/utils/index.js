@@ -505,3 +505,19 @@ export function fileToBase64 (file) {
     };
   });
 }
+
+export function getObjectValue (data, fieldName) {
+  if (data == null) return undefined;
+  if (fieldName == null || fieldName === '') return data;
+  let fieldPath = fieldName.split('.');
+  let tempValue = data;
+  if (Array.isArray(fieldPath)) {
+    fieldPath.forEach(key => {
+      if (tempValue != null) {
+        tempValue = tempValue[key];
+      }
+    });
+  }
+
+  return tempValue;
+}

@@ -162,6 +162,7 @@ export default {
       form: () => {
         return {
           ...this.form,
+          mode: this.mode,
           isEdit: this.dialogParams.isEdit,
           readOnly: this.dialogParams.readOnly,
           getWidgetValue: this.getWidgetValue,

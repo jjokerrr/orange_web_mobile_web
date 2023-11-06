@@ -311,12 +311,15 @@ export default {
       if (widget == null) return widget;
       let oldWidgetImpl = widget.widgetImpl;
       let childWidgetList = widget.childWidgetList;
+      let oldParent = widget.parent;
       widget.widgetImpl = undefined;
+      widget.parent = undefined;
       widget.childWidgetList = [];
       let actions = widget.props.actions;
       widget.props.actions = {};
       let temp = JSON.parse(JSON.stringify(widget));
       widget.widgetImpl = oldWidgetImpl;
+      widget.parent = oldParent;
       widget.childWidgetList = childWidgetList;
       widget.props.actions = actions;
       temp.column = undefined;
@@ -340,30 +343,31 @@ export default {
       return temp;
     },
     updateFormInfo (currentForm) {
-      debugger
-      let formConfig = {
-        pc: {
-          gutter: currentForm.pc.gutter,
-          filterItemWidth: currentForm.pc.filterItemWidth,
-          labelWidth: currentForm.pc.labelWidth,
-          labelPosition: currentForm.pc.labelPosition,
-          tableWidget: this.buildSaveWidget(currentForm.pc.tableWidget),
-          leftWidget: this.buildSaveWidget(currentForm.pc.leftWidget),
-          operationList: currentForm.pc.operationList,
-          customFieldList: currentForm.pc.customFieldList,
-          widgetList: currentForm.pc.widgetList.map(widget => {
+      let allowMode = ['pc', 'mobile'];
+      let formConfig = allowMode.reduce((formConfig, mode) => {
+        let tempFormConfig = currentForm[mode];
+        formConfig[mode] = {
+          gutter: tempFormConfig.gutter,
+          filterItemWidth: tempFormConfig.filterItemWidth,
+          labelWidth: tempFormConfig.labelWidth,
+          labelPosition: tempFormConfig.labelPosition,
+          tableWidget: this.buildSaveWidget(tempFormConfig.tableWidget),
+          leftWidget: this.buildSaveWidget(tempFormConfig.leftWidget),
+          operationList: tempFormConfig.operationList,
+          customFieldList: tempFormConfig.customFieldList,
+          widgetList: tempFormConfig.widgetList.map(widget => {
             return this.buildSaveWidget(widget);
           }),
-          formEventList: currentForm.pc.formEventList,
-          maskFieldList: currentForm.pc.maskFieldList,
-          width: currentForm.pc.width,
-          height: currentForm.pc.height,
-          fullscreen: currentForm.pc.fullscreen,
-          advanceQuery: currentForm.pc.advanceQuery
+          formEventList: tempFormConfig.formEventList,
+          maskFieldList: tempFormConfig.maskFieldList,
+          width: tempFormConfig.width,
+          height: tempFormConfig.height,
+          fullscreen: tempFormConfig.fullscreen,
+          advanceQuery: tempFormConfig.advanceQuery
         }
-      }
-      console.log('formConfig')
-      console.log(formConfig)
+        return formConfig;
+      }, {});
+
       let params = {
         onlineFormDto: {
           pageId: currentForm.pageId,
@@ -377,14 +381,17 @@ export default {
           datasourceIdList: [this.getPageDatasource.datasourceId]
         }
       }
-      debugger
       // 获取表单组件绑定的全部数据表column，检查组件是否绑定的重复元素
-      let widgetColumn = formConfig.pc.widgetList.map((widget) => widget.bindData.columnId);
-      console.log(widgetColumn)
-      const hasDuplicates = widgetColumn.some((value, index) => {
-        return widgetColumn.indexOf(value) !== index;
+      let widgetColumnPC = formConfig.pc.widgetList.map((widget) => widget.bindData.columnId);
+      let widgetColumnMOBILE = formConfig.mobile.widgetList.map((widget) => widget.bindData.columnId);
+      // console.log(widgetColumnPC)
+      const hasDuplicatesPC = widgetColumnPC.some((value, index) => {
+        return widgetColumnPC.indexOf(value) !== index;
       });
-      if (hasDuplicates) {
+      const hasDuplicatesMOBILE = widgetColumnMOBILE.some((value, index) => {
+        return widgetColumnMOBILE.indexOf(value) !== index;
+      });
+      if (hasDuplicatesPC || hasDuplicatesMOBILE) {
         this.$message.error('保存失败，存在重复字段')
         return; // 停止执行后续代码
       }
@@ -409,7 +416,6 @@ export default {
       }
     },
     onSaveClick () {
-      debugger
       if (this.activeStep === this.SysOnlinePageSettingStep.FORM_DESIGN) {
         if (this.$refs.formDesign) this.$refs.formDesign.saveForm();
       } else if (this.activeStep === this.SysOnlinePageSettingStep.DATASOURCE) {
@@ -544,28 +550,30 @@ export default {
             let config = item.widgetJson ? JSON.parse(item.widgetJson) : {};
             let paramList = item.paramsJson ? JSON.parse(item.paramsJson) : [];
             let formConfig = getFormConfig(item.formType, this.formPageData.pageType);
-            Object.keys(config).forEach(key => {
-              config[key] = {
-                ...formConfig[key],
-                ...config[key]
+            let allowMode = ['pc', 'mobile'];
+            allowMode.forEach(mode => {
+              config[mode] = {
+                ...formConfig[mode],
+                ...config[mode]
               }
-              config[key].formId = item.formId;
-              config[key].formCode = item.formCode;
-              config[key].formName = item.formName;
-              config[key].formKind = item.formKind;
-              config[key].formType = item.formType;
-              config[key].formTypeDictMap = item.formTypeDictMap;
-              config[key].masterTableId = item.masterTableId;
+
+              config[mode].formId = item.formId;
+              config[mode].formCode = item.formCode;
+              config[mode].formName = item.formName;
+              config[mode].formKind = item.formKind;
+              config[mode].formType = item.formType;
+              config[mode].formTypeDictMap = item.formTypeDictMap;
+              config[mode].masterTableId = item.masterTableId;
               // 合并表单操作
-              config[key].operationList = this.mergeArray(config[key].operationList, formConfig[key].operationList, 'id');
+              config[mode].operationList = this.mergeArray(config[mode].operationList, formConfig[mode].operationList, 'id');
               // 合并组件操作
-              if (Array.isArray(config[key].widgetList)) {
-                config[key].widgetList.forEach(widget => {
-                  this.mergeWidget(widget, key);
+              if (Array.isArray(config[mode].widgetList)) {
+                config[mode].widgetList.forEach(widget => {
+                  this.mergeWidget(widget, mode);
                 });
               }
-              this.mergeWidget(config[key].tableWidget, key);
-              this.mergeWidget(config[key].leftWidget, key);
+              this.mergeWidget(config[mode].tableWidget, mode);
+              this.mergeWidget(config[mode].leftWidget, mode);
             });
             return {
               ...item,
@@ -975,14 +983,13 @@ export default {
       return this.formPageData.pageId != null && this.formPageData.pageId !== '';
     },
     widgetGroup () {
-      return widgetData.widgetGroupList;
+      return widgetData.formWidgetGroupList;
     },
     getPageDatasource () {
       return this.pageDatasourceList[0];
     },
     getPageDatasourceTableList () {
       if (this.getPageDatasource == null) return [];
-
       let tableList = [];
       // 添加主表信息
       tableList.push({

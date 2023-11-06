@@ -61,7 +61,8 @@
         :style="{'min-height': dialogParams.isEdit ? height : '0px'}"
       >
         <el-scrollbar style="height: 100%;" class="custom-scroll">
-          <el-form ref="form" :model="formData" class="full-width-input"
+          <component :is="mode === 'pc' ? 'el-form' : 'van-form'"
+            ref="form" :model="formData" class="full-width-input"
             :rules="rules" style="width: 100%;"
             :label-width="(form.labelWidth || 100) + 'px'"
             :label-position="form.labelPosition || 'right'"
@@ -69,7 +70,7 @@
             @submit.native.prevent
           >
             <OnlineCustomBlock v-show="isReady" ref="root" :value="form.widgetList" @input="onInput" :height="height" :isEdit="dialogParams.isEdit" :showBorder="false" @widgetClick="onWidgetClick" />
-          </el-form>
+          </component>
         </el-scrollbar>
       </div>
       <el-row v-if="!dialogParams.isEdit" class="menu-box" type="flex" justify="end">
@@ -80,7 +81,8 @@
         >
           {{operation.name || SysCustomWidgetOperationType.getValue(operation.type)}}
         </el-button>
-        <el-button v-if="!dialogParams.readOnly" :size="defaultFormItemSize" :plain="true" @click="onCancel(false)">
+        <el-button v-if="!dialogParams.readOnly" type="primary" :size="defaultFormItemSize" :plain="true"
+          @click="onCancel(false)">
           取消
         </el-button>
         <el-button v-if="!dialogParams.readOnly" type="primary" :size="defaultFormItemSize"
@@ -148,6 +150,7 @@ export default {
       form: () => {
         return {
           ...this.form,
+          mode: this.mode,
           isEdit: this.dialogParams.isEdit,
           readOnly: this.dialogParams.readOnly,
           getWidgetValue: this.getWidgetValue,
@@ -191,7 +194,6 @@ export default {
     },
     // 提交表单数据
     onSaveFormData () {
-      debugger
       if (this.masterTable == null || this.masterTable.datasource == null) {
         this.$message.error('表单使用主数据源或主表不存在！');
         return;
@@ -396,6 +398,10 @@ export default {
             this.form.tableMap.forEach(table => {
               if (table.relation && table.relation.relationType === this.SysOnlineRelationType.ONE_TO_ONE) {
                 relationNameList.push(table.relation.variableName);
+                this.formData[table.relation.variableName] = table.columnList.reduce((retObj, column) => {
+                  retObj[column.columnName] = undefined;
+                  return retObj;
+                }, {});
               } else if (table.relation == null) {
                 datasourceName = table.datasource.variableName;
               }
@@ -406,7 +412,12 @@ export default {
                 this.formData[datasourceName][key] = this.dialogParams.rowData[key];
               } else {
                 // 从表字段
-                if (this.dialogParams.rowData[key]) this.formData[key] = this.dialogParams.rowData[key];
+                if (this.dialogParams.rowData[key]) {
+                  this.formData[key] = {
+                    ...this.formData[key],
+                    ...this.dialogParams.rowData[key]
+                  };
+                }
               }
             });
             // 初始化一对多数据

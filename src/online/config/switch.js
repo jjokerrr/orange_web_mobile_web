@@ -11,6 +11,24 @@ const switchAttribute = {
     min: 1,
     max: 24
   },
+  size: {
+    name: '开关尺寸',
+    widgetType: SysCustomWidgetType.Input,
+    visible: function (formConfig) {
+      return formConfig && formConfig.activeMode === 'mobile';
+    },
+    value: '24px'
+  },
+  'active-color': {
+    name: '打开背景色',
+    widgetType: SysCustomWidgetType.ColorPicker,
+    value: '#1989fa'
+  },
+  'inactive-color': {
+    name: '关闭背景色',
+    widgetType: SysCustomWidgetType.ColorPicker,
+    value: '#E8E8E8'
+  },
   required: {
     name: '是否必填',
     value: false,

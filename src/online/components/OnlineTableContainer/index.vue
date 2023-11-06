@@ -1002,6 +1002,7 @@ export default {
       if (!node) return;
       let table = this.findParentByTagName(node, 'table', true);
       if (!table) {
+        console.log('clearSelected,未找到table', node);
         return;
       }
       let classTds = Array.from(table.getElementsByClassName('selectTdClass'));

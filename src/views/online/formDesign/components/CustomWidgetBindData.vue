@@ -148,7 +148,9 @@ export default {
       return (this.formConfig().getWidgetAttribute(this.value.widgetType) || {}).attribute;
     },
     getValidTableList () {
-      if (this.value.widgetType === this.SysCustomWidgetType.Table || this.value.widgetType === this.SysCustomWidgetType.List) {
+      if (this.value.parent != null) {
+        return this.formConfig().getTableWidgetTableList;
+      } else if (this.value.widgetType === this.SysCustomWidgetType.Table || this.value.widgetType === this.SysCustomWidgetType.List) {
         return this.formConfig().getTableWidgetTableList.filter(item => {
           if (this.formType === this.SysOnlineFormType.QUERY || this.formType === this.SysOnlineFormType.ONE_TO_ONE_QUERY) {
             return item.tableId === this.formConfig().getMasterTable.tableId;
@@ -173,6 +175,7 @@ export default {
         let { disabled, warningMsg } = columnIsValidByWidgetType(item, this.value.widgetType, this.formType);
         // 查询页面仅能选择支持过滤的字段
         if (!disabled && item.filterType === this.SysOnlineColumnFilterType.NONE &&
+          this.formConfig().activeMode !== 'mobile' &&
           [this.SysOnlineFormType.QUERY, this.SysOnlineFormType.ADVANCE_QUERY, this.SysOnlineFormType.ONE_TO_ONE_QUERY].indexOf(this.formType) !== -1
         ) {
           disabled = true;

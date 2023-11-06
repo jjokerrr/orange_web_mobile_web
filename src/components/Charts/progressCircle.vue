@@ -66,7 +66,6 @@ export default {
     onDblClick () {
       this.$emit('dblclick', this.dataObject);
     }
-    
   },
   computed: {
     title () {
